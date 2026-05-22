@@ -1,0 +1,76 @@
+import type { Translations } from './types';
+
+function pluralEn(n: number, one: string, many: string): string {
+  return n === 1 ? one : many;
+}
+
+export const en: Translations = {
+  hero: {
+    meta: 'tool = "batch image optimization" // v1.21',
+    lead: 'Prepare web-ready image assets in your browser with vector and raster batch compression.',
+  },
+  workspace: {
+    eyebrow: 'Workspace',
+    title: 'Pick a mode and batch your assets',
+    modeChangeConfirm: 'Switching modes will clear the current file selection. Continue?',
+  },
+  modeSwitch: {
+    ariaLabel: 'Compression mode',
+    raster: 'Raster',
+    vector: 'Vector',
+  },
+  runPanel: {
+    filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
+    outputsPlanned: (n) => `${n} ${pluralEn(n, 'output', 'outputs')} planned`,
+    outdatedWarning: 'Settings changed after the last run. Results are outdated.',
+    compress: 'Reducio!',
+    compressing: 'Reducio...',
+  },
+  settingsPanel: {
+    quality: 'Quality',
+    outputFormats: 'Output formats',
+    original: 'Original',
+    advancedCodec: 'Advanced codec settings',
+    webpEffort: 'WebP effort',
+    webpHint: 'Higher effort → smaller file, slower encoding',
+    avifSpeed: 'AVIF speed',
+    avifHint: 'Lower speed → smaller file, slower encoding',
+    coordPrecision: 'Coordinate precision',
+    precisionHint: 'Decimal places in path coordinates — lower = smaller file, less precision',
+    options: 'Options',
+    prettifyMarkup: 'Prettify markup',
+    prettifyHint: 'Indent and format the output SVG source',
+    removeDimensions: 'Remove fixed dimensions',
+    removeDimensionsHint: 'Strip width/height, derive viewBox from them if missing',
+  },
+  uploadPanel: {
+    ariaEmpty: 'Drop files here or click to choose',
+    ariaWithFiles: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected. Click or drop to replace.`,
+    dropHere: 'Drop files here',
+    dropping: 'Drop to add files',
+    orText: 'or',
+    clickToChoose: 'click to choose',
+    svgOnly: 'SVG only',
+    rasterFormats: 'JPG, PNG, WebP, AVIF',
+    dropToReplace: 'Drop to replace',
+    filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
+    changeSelection: 'Change selection',
+    filesSelectedSummary: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
+    filesRejectedSummary: (n) => `${n} ${pluralEn(n, 'file', 'files')} rejected`,
+    rejectVectorReason: 'Vector mode accepts only SVG files.',
+    rejectRasterReason: 'Raster mode accepts JPG, PNG, WebP, and AVIF files.',
+  },
+  resultsPanel: {
+    title: 'Results',
+    emptyHint: 'Review each optimized asset before downloading.',
+    outputs: (n) => `${n} ${pluralEn(n, 'output', 'outputs')}`,
+    files: (n) => `${n} ${pluralEn(n, 'file', 'files')}`,
+    savedAvg: (p) => `${p}% saved avg`,
+    largerAvg: (p) => `${p}% larger avg`,
+    downloadAll: 'Download all',
+    empty: 'No processed assets yet. Run a batch to populate the results table, young Padawan.',
+    error: 'Error',
+    processingFailed: 'Processing failed',
+    download: 'Download',
+  },
+};

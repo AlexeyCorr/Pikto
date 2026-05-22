@@ -1,0 +1,57 @@
+:root {
+  --text-main-color: oklch(23% 0.02 270deg);
+  --text-secondary-color: oklch(45% 0.01 270deg);
+  --bg-main-color: oklch(97.5% 0.004 270deg);
+  --accent-color: oklch(53% 0.14 280deg);
+  --accent-text-color: oklch(42% 0.12 280deg);
+  --card-bg-color: oklch(99% 0.002 270deg);
+  --border-color: oklch(78% 0.007 270deg);
+  --divider-color: oklch(86% 0.006 270deg);
+  --dot-color: oklch(70% 0.01 270deg / 35%);
+  --surface-2: oklch(93% 0.006 270deg);
+  --surface-3: oklch(89% 0.007 270deg);
+  --accent-glow: oklch(50% 0.16 280deg / 8%);
+  --shadow-soft: 0 12px 30px oklch(0% 0 0deg / 8%);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --space-1: 12px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --text-main-color: oklch(87% 0.01 270deg);
+    --text-secondary-color: oklch(72% 0.01 270deg);
+    --bg-main-color: oklch(10% 0.018 270deg);
+    --accent-color: oklch(65% 0.15 280deg);
+    --accent-text-color: oklch(70% 0.12 280deg);
+    --card-bg-color: oklch(23% 0.015 270deg);
+    --border-color: oklch(30% 0.01 270deg);
+    --divider-color: oklch(22% 0.012 270deg);
+    --dot-color: oklch(35% 0.02 270deg / 45%);
+    --surface-2: oklch(14% 0.016 270deg);
+    --surface-3: oklch(18% 0.014 270deg);
+    --accent-glow: oklch(65% 0.15 280deg / 14%);
+    --shadow-soft: 0 12px 30px oklch(0% 0 0deg / 20%);
+  }
+}
+
+[data-theme='dark'] {
+  --text-main-color: oklch(87% 0.01 270deg);
+  --text-secondary-color: oklch(72% 0.01 270deg);
+  --bg-main-color: oklch(10% 0.018 270deg);
+  --accent-color: oklch(65% 0.15 280deg);
+  --accent-text-color: oklch(70% 0.12 280deg);
+  --card-bg-color: oklch(23% 0.015 270deg);
+  --border-color: oklch(30% 0.01 270deg);
+  --divider-color: oklch(22% 0.012 270deg);
+  --dot-color: oklch(35% 0.02 270deg / 45%);
+  --surface-2: oklch(14% 0.016 270deg);
+  --surface-3: oklch(18% 0.014 270deg);
+  --accent-glow: oklch(65% 0.15 280deg / 14%);
+  --shadow-soft: 0 12px 30px oklch(0% 0 0deg / 20%);
+}
