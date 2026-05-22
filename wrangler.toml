@@ -1,13 +1,13 @@
-name = "alexeycorr-dev"
+name = "pikto"
 compatibility_date = "2025-12-01"
 main = "./worker.ts"
-
-[assets]
-binding = "ASSETS"
-directory = "./dist"
 
 routes = [
 	{ pattern = "alexeycorr.dev/pikto*", custom_domain = true },
 	{ pattern = "alexeycorr.dev/ru/pikto*", custom_domain = true },
 	{ pattern = "alexeycorr.dev/en/pikto*", custom_domain = true }
 ]
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
