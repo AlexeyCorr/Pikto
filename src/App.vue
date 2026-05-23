@@ -1,61 +1,72 @@
 <template>
+  <AppHeader />
   <main class="app-shell">
     <AppHero />
 
     <section class="workspace" aria-labelledby="workspace-title">
       <div class="workspace__header">
-        <div>
+        <div class="workspace__title-block">
           <p class="workspace__eyebrow">{{ t.workspace.eyebrow }}</p>
-          <h2 id="workspace-title">{{ t.workspace.title }}</h2>
+          <h2 id="workspace-title" class="workspace__title">{{ t.workspace.title }}</h2>
         </div>
-
         <ModeSwitch :model-value="state.mode.value" @update:model-value="handleModeChange" />
       </div>
 
       <div class="workspace__grid">
-        <UploadPanel
-          :mode="state.mode.value"
-          :files="state.selectedFiles.value"
-          :rejected-files="state.rejectedFiles.value"
-          @select-files="handleSelectFiles"
-        />
+        <div class="workspace__section">
+          <p class="workspace__step">01 — {{ t.workspace.stepFiles }}</p>
+          <UploadPanel
+            :mode="state.mode.value"
+            :files="state.selectedFiles.value"
+            :rejected-files="state.rejectedFiles.value"
+            @select-files="handleSelectFiles"
+            @remove-file="handleRemoveFile"
+          />
+        </div>
 
-        <SettingsPanel
-          :mode="state.mode.value"
-          :raster="state.rasterSettings.value"
-          :vector="state.vectorSettings.value"
-          :video="state.videoSettings.value"
-          :source-image-size="state.sourceImageSize.value"
-          :file-count="state.selectedFiles.value.length"
-          @update-raster-quality="state.setRasterQuality"
-          @update-include-original="state.setIncludeOriginal"
-          @toggle-raster-format="state.toggleRasterFormat"
-          @update-webp-method="state.setWebpMethod"
-          @update-avif-speed="state.setAvifSpeed"
-          @update-resize-width="state.setResizeWidth"
-          @update-resize-height="state.setResizeHeight"
-          @update-resize-locked="state.setResizeLocked"
-          @update-vector-precision="state.setVectorPrecision"
-          @update-vector-prettify="state.setVectorPrettify"
-          @update-vector-remove-dimensions="state.setVectorRemoveDimensions"
-          @update-video-include-original="state.setVideoIncludeOriginal"
-          @toggle-video-format="state.toggleVideoFormat"
-          @update-video-preset="state.setVideoPreset"
-        />
+        <div class="workspace__section">
+          <p class="workspace__step">02 — {{ t.workspace.stepSettings }}</p>
+          <SettingsPanel
+            :mode="state.mode.value"
+            :raster="state.rasterSettings.value"
+            :vector="state.vectorSettings.value"
+            :video="state.videoSettings.value"
+            :source-image-size="state.sourceImageSize.value"
+            :file-count="state.selectedFiles.value.length"
+            @update-raster-quality="state.setRasterQuality"
+            @update-include-original="state.setIncludeOriginal"
+            @toggle-raster-format="state.toggleRasterFormat"
+            @update-webp-method="state.setWebpMethod"
+            @update-avif-speed="state.setAvifSpeed"
+            @update-resize-width="state.setResizeWidth"
+            @update-resize-height="state.setResizeHeight"
+            @update-resize-locked="state.setResizeLocked"
+            @update-vector-precision="state.setVectorPrecision"
+            @update-vector-prettify="state.setVectorPrettify"
+            @update-vector-remove-dimensions="state.setVectorRemoveDimensions"
+            @update-video-include-original="state.setVideoIncludeOriginal"
+            @toggle-video-format="state.toggleVideoFormat"
+            @update-video-preset="state.setVideoPreset"
+          />
+        </div>
       </div>
 
-      <RunPanel
-        :file-count="state.selectedFiles.value.length"
-        :output-count="plannedOutputCount"
-        :disabled="state.selectedFiles.value.length === 0 || state.status.value === 'processing'"
-        :processing="state.status.value === 'processing'"
-        :has-outdated-results="state.hasOutdatedResults.value"
-        :progress="workerProgress"
-        @run="runCompression"
-      />
+      <div class="workspace__section workspace__section--run">
+        <p class="workspace__step">03 — {{ t.workspace.stepRun }}</p>
+        <RunPanel
+          :file-count="state.selectedFiles.value.length"
+          :output-count="plannedOutputCount"
+          :disabled="state.selectedFiles.value.length === 0 || state.status.value === 'processing'"
+          :processing="state.status.value === 'processing'"
+          :has-outdated-results="state.hasOutdatedResults.value"
+          :progress="workerProgress"
+          @run="runCompression"
+        />
+      </div>
     </section>
 
     <ResultsPanel
+      ref="resultsPanelRef"
       :results="state.results.value"
       :summary="batchSummary"
       @download-all="downloadAll"
@@ -65,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, ref, toRaw } from 'vue';
+  import { computed, nextTick, onBeforeUnmount, ref, toRaw } from 'vue';
   import { t } from '@/app/i18n';
   import { usePiktoState } from '@/app/composables/usePiktoState';
   import { buildDownloadName, buildResultsArchive, triggerBlobDownload } from '@/app/utils/download';
@@ -73,6 +84,7 @@
   import type { BatchSummary, JobOutput, Mode } from '@/app/types';
   import type { WorkerRequest, WorkerResponse } from '@/app/worker/contracts';
   import MediaWorker from './app/worker/media.worker?worker';
+  import AppHeader from '@/components/AppHeader.vue';
   import AppHero from '@/components/AppHero.vue';
   import ModeSwitch from '@/components/ModeSwitch.vue';
   import ResultsPanel from '@/components/ResultsPanel.vue';
@@ -82,6 +94,7 @@
 
   const state = usePiktoState();
   const workerProgress = ref<{ completed: number; total: number } | null>(null);
+  const resultsPanelRef = ref<InstanceType<typeof ResultsPanel> | null>(null);
   let worker: Worker | null = null;
 
   const plannedOutputCount = computed(() => {
@@ -171,6 +184,10 @@
     }
   }
 
+  function handleRemoveFile(index: number) {
+    state.removeFile(index);
+  }
+
   async function handleSelectFiles(files: File[]) {
     const result = filterAcceptedFiles(state.mode.value, files);
     state.setSelectedFiles(result.accepted);
@@ -247,6 +264,9 @@
       if (event.data.type === 'done') {
         workerProgress.value = null;
         applyWorkerResults(event.data.results);
+        nextTick(() => {
+          resultsPanelRef.value?.$el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       }
 
       if (event.data.type === 'error') {
@@ -284,6 +304,13 @@
   .app-shell {
     display: grid;
     gap: var(--space-4);
+    padding-inline: 16px;
+    max-width: 1280px;
+    margin: 0 auto;
+
+    @media (min-width: 768px) {
+      padding-inline: 48px;
+    }
   }
 
   .workspace {
@@ -294,25 +321,36 @@
     border-radius: var(--radius-lg);
     background: var(--card-bg-color);
     box-shadow: var(--shadow-soft);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
   }
 
   .workspace__header {
     display: grid;
     gap: var(--space-2);
+    align-items: start;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--divider-color);
+  }
+
+  .workspace__title-block {
+    display: grid;
+    gap: 4px;
   }
 
   .workspace__eyebrow {
-    margin: 0 0 8px;
+    margin: 0;
     color: var(--text-secondary-color);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
-  .workspace__header h2 {
+  .workspace__title {
     margin: 0;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    line-height: 1;
   }
 
   .workspace__grid {
@@ -321,10 +359,27 @@
     align-items: flex-start;
   }
 
+  .workspace__section {
+    display: grid;
+    gap: 10px;
+  }
+
+  .workspace__section--run {
+    margin-top: 4px;
+  }
+
+  .workspace__step {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
   @media (min-width: 880px) {
     .workspace__header {
       grid-template-columns: 1fr auto;
-      align-items: start;
     }
 
     .workspace__grid {

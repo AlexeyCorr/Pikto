@@ -147,6 +147,17 @@ export function usePiktoState() {
     rejectedFiles.value = files;
   }
 
+  function removeFile(index: number) {
+    const nextFiles = selectedFiles.value.filter((_, i) => i !== index);
+    selectedFiles.value = nextFiles;
+    if (nextFiles.length === 0) {
+      status.value = 'idle';
+      clearResults();
+    } else {
+      markResultsOutdated();
+    }
+  }
+
   function clearFiles() {
     selectedFiles.value = [];
     rejectedFiles.value = [];
@@ -211,6 +222,7 @@ export function usePiktoState() {
     toggleVideoFormat,
     setSelectedFiles,
     setRejectedFiles,
+    removeFile,
     clearFiles,
     clearResults,
     resetForNewRun,

@@ -7,6 +7,9 @@ export interface Translations {
     eyebrow: string;
     title: string;
     modeChangeConfirm: string;
+    stepFiles: string;
+    stepSettings: string;
+    stepRun: string;
   };
   modeSwitch: {
     ariaLabel: string;
@@ -55,10 +58,11 @@ export interface Translations {
     dropping: string;
     orText: string;
     clickToChoose: string;
+    addMore: string;
     svgOnly: string;
     rasterFormats: string;
     videoFormats: string;
-    dropToReplace: string;
+    dropToAdd: string;
     filesSelected: (n: number) => string;
     changeSelection: string;
     filesSelectedSummary: (n: number) => string;
@@ -66,6 +70,7 @@ export interface Translations {
     rejectVectorReason: string;
     rejectRasterReason: string;
     rejectVideoReason: string;
+    removeFile: string;
   };
   resultsPanel: {
     title: string;

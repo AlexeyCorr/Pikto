@@ -33,9 +33,10 @@ src/
     composables/usePiktoState.ts # central state (refs + actions)
     utils/                       # files, download, raster-options
     worker/
-      image.worker.ts            # Web Worker entry
+      media.worker.ts            # Web Worker entry
       process-raster.ts          # jSquash encoding
       process-svg.ts             # SVGO optimization
+      process-video.ts           # video optimization
       contracts.ts               # WorkerRequest / WorkerResponse types
   styles/
     tokens.css                   # design tokens (CSS custom properties)

@@ -48,6 +48,7 @@
 <style>
   .mode-switch {
     display: inline-flex;
+    justify-content: center;
     gap: 10px;
     padding: 8px;
     border: 1px solid var(--border-color);
@@ -58,15 +59,23 @@
   .mode-switch__button {
     border: 0;
     border-radius: 999px;
-    padding: 10px 18px;
+    padding: 9px 18px;
     background: transparent;
     color: var(--text-secondary-color);
     font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
     cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .mode-switch__button:hover:not(.mode-switch__button--active) {
+    color: var(--text-main-color);
+    background: var(--surface-3);
   }
 
   .mode-switch__button--active {
     background: var(--accent-color);
-    color: white;
+    color: var(--on-accent-color);
+    box-shadow: 0 2px 8px color-mix(in oklch, var(--accent-color) 40%, transparent);
   }
 </style>
