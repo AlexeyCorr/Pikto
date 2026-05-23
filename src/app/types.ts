@@ -1,10 +1,22 @@
-export type Mode = 'raster' | 'vector';
+export type Mode = 'raster' | 'vector' | 'video';
 
 export type RasterFormat = 'jpg' | 'png' | 'webp' | 'avif';
 
 export type RasterOutputFormat = RasterFormat | 'original';
 
-export type OutputFormat = RasterOutputFormat | 'svg';
+export type VideoFormat = 'mp4' | 'webm';
+
+export type VideoOutputFormat = VideoFormat | 'original';
+
+export type VideoCompressionPreset = 'high' | 'balanced' | 'small';
+
+export type OutputFormat = RasterOutputFormat | VideoOutputFormat | 'svg';
+
+export interface VideoSettings {
+  includeOriginal: boolean;
+  selectedFormats: VideoFormat[];
+  compressionPreset: VideoCompressionPreset;
+}
 
 export type JobStatus = 'success' | 'error';
 

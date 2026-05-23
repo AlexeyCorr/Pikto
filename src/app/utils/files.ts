@@ -17,7 +17,9 @@ export function filterAcceptedFiles(mode: Mode, files: File[]) {
       reason:
         mode === 'vector'
           ? t.value.uploadPanel.rejectVectorReason
-          : t.value.uploadPanel.rejectRasterReason,
+          : mode === 'video'
+            ? t.value.uploadPanel.rejectVideoReason
+            : t.value.uploadPanel.rejectRasterReason,
     });
   }
 

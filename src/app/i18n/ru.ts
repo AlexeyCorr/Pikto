@@ -23,6 +23,7 @@ export const ru: Translations = {
     ariaLabel: 'Режим сжатия',
     raster: 'Растр',
     vector: 'Вектор',
+    video: 'Видео',
   },
   runPanel: {
     filesSelected: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')} выбрано`,
@@ -52,6 +53,11 @@ export const ru: Translations = {
     resizeHeight: 'В',
     resizeOriginal: (w, h) => `Оригинал: ${w} × ${h}`,
     resizeSingleFileOnly: 'Доступно только для одного файла',
+    compressionPreset: 'Пресет сжатия',
+    presetHigh: 'Высокое качество',
+    presetBalanced: 'Баланс',
+    presetSmall: 'Макс. сжатие',
+    videoFormatComingSoon: 'скоро',
   },
   uploadPanel: {
     ariaEmpty: 'Перетащите файлы или нажмите для выбора',
@@ -62,6 +68,7 @@ export const ru: Translations = {
     clickToChoose: 'выберите вручную',
     svgOnly: 'Только SVG',
     rasterFormats: 'JPG, PNG, WebP, AVIF',
+    videoFormats: 'MP4',
     dropToReplace: 'Отпустите для замены',
     filesSelected: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')} выбрано`,
     changeSelection: 'Изменить выбор',
@@ -69,6 +76,7 @@ export const ru: Translations = {
     filesRejectedSummary: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')} отклонено`,
     rejectVectorReason: 'Векторный режим принимает только SVG-файлы.',
     rejectRasterReason: 'Растровый режим принимает JPG, PNG, WebP и AVIF.',
+    rejectVideoReason: 'Режим видео принимает только MP4 и WEBM.',
   },
   resultsPanel: {
     title: 'Результаты',

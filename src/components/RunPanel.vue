@@ -21,7 +21,7 @@
         ></div>
       </div>
 
-      <p class="run-panel__progress-label">{{ progress.completed }} / {{ progress.total }}</p>
+      <p class="run-panel__progress-label">{{ Math.round((progress.completed / progress.total) * 100) }}%</p>
     </div>
   </section>
 </template>

@@ -12,6 +12,7 @@ export interface Translations {
     ariaLabel: string;
     raster: string;
     vector: string;
+    video: string;
   };
   runPanel: {
     filesSelected: (n: number) => string;
@@ -41,6 +42,11 @@ export interface Translations {
     resizeHeight: string;
     resizeOriginal: (w: number, h: number) => string;
     resizeSingleFileOnly: string;
+    compressionPreset: string;
+    presetHigh: string;
+    presetBalanced: string;
+    presetSmall: string;
+    videoFormatComingSoon: string;
   };
   uploadPanel: {
     ariaEmpty: string;
@@ -51,6 +57,7 @@ export interface Translations {
     clickToChoose: string;
     svgOnly: string;
     rasterFormats: string;
+    videoFormats: string;
     dropToReplace: string;
     filesSelected: (n: number) => string;
     changeSelection: string;
@@ -58,6 +65,7 @@ export interface Translations {
     filesRejectedSummary: (n: number) => string;
     rejectVectorReason: string;
     rejectRasterReason: string;
+    rejectVideoReason: string;
   };
   resultsPanel: {
     title: string;

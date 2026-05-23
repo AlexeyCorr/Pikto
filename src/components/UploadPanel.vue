@@ -21,7 +21,13 @@
         class="upload-panel__input"
         type="file"
         multiple
-        :accept="mode === 'vector' ? '.svg,image/svg+xml' : '.jpg,.jpeg,.png,.webp,.avif'"
+        :accept="
+          mode === 'vector'
+            ? '.svg,image/svg+xml'
+            : mode === 'video'
+              ? '.mp4,video/mp4'
+              : '.jpg,.jpeg,.png,.webp,.avif'
+        "
         @change="onChange"
       />
 
@@ -36,7 +42,7 @@
         </p>
         <p class="upload-panel__choose-hint">{{ t.uploadPanel.orText }} <span class="upload-panel__choose-link">{{ t.uploadPanel.clickToChoose }}</span></p>
         <p class="upload-panel__format-hint">
-          {{ mode === 'vector' ? t.uploadPanel.svgOnly : t.uploadPanel.rasterFormats }}
+          {{ mode === 'vector' ? t.uploadPanel.svgOnly : mode === 'video' ? t.uploadPanel.videoFormats : t.uploadPanel.rasterFormats }}
         </p>
       </template>
 

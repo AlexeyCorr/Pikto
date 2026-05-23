@@ -19,6 +19,16 @@
     >
       {{ t.modeSwitch.vector }}
     </button>
+
+    <button
+      type="button"
+      class="mode-switch__button"
+      :class="{ 'mode-switch__button--active': modelValue === 'video' }"
+      :aria-pressed="modelValue === 'video'"
+      @click="emit('update:modelValue', 'video')"
+    >
+      {{ t.modeSwitch.video }}
+    </button>
   </div>
 </template>
 

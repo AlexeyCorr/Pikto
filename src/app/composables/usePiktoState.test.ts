@@ -90,4 +90,55 @@ describe('usePiktoState', () => {
       expect(state.resizeActive.value).toBe(false);
     });
   });
+
+  describe('video settings', () => {
+    it('includes original video output by default', () => {
+      const state = usePiktoState();
+
+      expect(state.videoOutputFormats.value).toEqual(['original']);
+    });
+
+    it('toggles extra video formats', () => {
+      const state = usePiktoState();
+
+      state.toggleVideoFormat('mp4');
+      state.toggleVideoFormat('webm');
+
+      expect(state.videoSettings.value.selectedFormats).toEqual(['mp4', 'webm']);
+      expect(state.videoOutputFormats.value).toEqual(['original', 'mp4', 'webm']);
+    });
+
+    it('marks results outdated when the video preset changes after completion', () => {
+      const state = usePiktoState();
+
+      state.results.value = [
+        {
+          id: '1',
+          sourceFileName: 'clip.mp4',
+          sourceFormat: 'mp4',
+          targetFormat: 'mp4',
+          originalBytes: 1000,
+          outputBytes: 700,
+          savedPercent: 30,
+          status: 'success',
+        },
+      ];
+      state.status.value = 'done';
+
+      state.setVideoPreset('small');
+
+      expect(state.videoSettings.value.compressionPreset).toBe('small');
+      expect(state.status.value).toBe('ready');
+      expect(state.hasOutdatedResults.value).toBe(true);
+    });
+
+    it('omits original when includeOriginal is false', () => {
+      const state = usePiktoState();
+
+      state.setVideoIncludeOriginal(false);
+      state.toggleVideoFormat('webm');
+
+      expect(state.videoOutputFormats.value).toEqual(['webm']);
+    });
+  });
 });

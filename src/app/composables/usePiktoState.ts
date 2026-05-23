@@ -2,6 +2,7 @@ import { computed, ref } from 'vue';
 import {
   DEFAULT_RASTER_SETTINGS,
   DEFAULT_VECTOR_SETTINGS,
+  DEFAULT_VIDEO_SETTINGS,
 } from '../constants';
 import type {
   JobOutput,
@@ -10,6 +11,9 @@ import type {
   RasterFormat,
   RasterOutputFormat,
   RejectedFile,
+  VideoCompressionPreset,
+  VideoFormat,
+  VideoOutputFormat,
 } from '../types';
 
 export function usePiktoState() {
@@ -17,6 +21,7 @@ export function usePiktoState() {
   const selectedFiles = ref<File[]>([]);
   const rejectedFiles = ref<RejectedFile[]>([]);
   const vectorSettings = ref({ ...DEFAULT_VECTOR_SETTINGS });
+  const videoSettings = ref({ ...DEFAULT_VIDEO_SETTINGS });
   const rasterSettings = ref({
     ...DEFAULT_RASTER_SETTINGS,
     resize: { ...DEFAULT_RASTER_SETTINGS.resize },
@@ -83,6 +88,25 @@ export function usePiktoState() {
     markResultsOutdated();
   }
 
+  function setVideoPreset(value: VideoCompressionPreset) {
+    videoSettings.value.compressionPreset = value;
+    markResultsOutdated();
+  }
+
+  function setVideoIncludeOriginal(value: boolean) {
+    videoSettings.value.includeOriginal = value;
+    markResultsOutdated();
+  }
+
+  function toggleVideoFormat(value: VideoFormat) {
+    const nextFormats = videoSettings.value.selectedFormats.includes(value)
+      ? videoSettings.value.selectedFormats.filter((format) => format !== value)
+      : [...videoSettings.value.selectedFormats, value];
+
+    videoSettings.value.selectedFormats = nextFormats;
+    markResultsOutdated();
+  }
+
   function setResizeWidth(value: number | null) {
     rasterSettings.value.resize.width = value;
     if (
@@ -143,6 +167,11 @@ export function usePiktoState() {
     return rasterSettings.value.includeOriginal ? ['original', ...extra] : [...extra];
   });
 
+  const videoOutputFormats = computed<VideoOutputFormat[]>(() => {
+    const extra = videoSettings.value.selectedFormats;
+    return videoSettings.value.includeOriginal ? ['original', ...extra] : [...extra];
+  });
+
   const resizeActive = computed(
     () =>
       rasterSettings.value.resize.width !== null &&
@@ -157,11 +186,13 @@ export function usePiktoState() {
     rejectedFiles,
     vectorSettings,
     rasterSettings,
+    videoSettings,
     results,
     status,
     hasOutdatedResults,
     sourceImageSize,
     outputFormats,
+    videoOutputFormats,
     resizeActive,
     setMode,
     setRasterQuality,
@@ -175,6 +206,9 @@ export function usePiktoState() {
     setVectorPrecision,
     setVectorPrettify,
     setVectorRemoveDimensions,
+    setVideoPreset,
+    setVideoIncludeOriginal,
+    toggleVideoFormat,
     setSelectedFiles,
     setRejectedFiles,
     clearFiles,

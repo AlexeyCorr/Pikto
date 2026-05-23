@@ -18,6 +18,7 @@ export const en: Translations = {
     ariaLabel: 'Compression mode',
     raster: 'Raster',
     vector: 'Vector',
+    video: 'Video',
   },
   runPanel: {
     filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
@@ -47,6 +48,11 @@ export const en: Translations = {
     resizeHeight: 'H',
     resizeOriginal: (w, h) => `Original: ${w} × ${h}`,
     resizeSingleFileOnly: 'Available for single file only',
+    compressionPreset: 'Compression preset',
+    presetHigh: 'High quality',
+    presetBalanced: 'Balanced',
+    presetSmall: 'Max compression',
+    videoFormatComingSoon: 'soon',
   },
   uploadPanel: {
     ariaEmpty: 'Drop files here or click to choose',
@@ -57,6 +63,7 @@ export const en: Translations = {
     clickToChoose: 'click to choose',
     svgOnly: 'SVG only',
     rasterFormats: 'JPG, PNG, WebP, AVIF',
+    videoFormats: 'MP4',
     dropToReplace: 'Drop to replace',
     filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
     changeSelection: 'Change selection',
@@ -64,6 +71,7 @@ export const en: Translations = {
     filesRejectedSummary: (n) => `${n} ${pluralEn(n, 'file', 'files')} rejected`,
     rejectVectorReason: 'Vector mode accepts only SVG files.',
     rejectRasterReason: 'Raster mode accepts JPG, PNG, WebP, and AVIF files.',
+    rejectVideoReason: 'Video mode accepts MP4 and WEBM files.',
   },
   resultsPanel: {
     title: 'Results',

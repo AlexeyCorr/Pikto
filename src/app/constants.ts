@@ -1,8 +1,17 @@
-import type { Mode, RasterFormat, RasterSettings, VectorSettings } from './types';
+import type {
+  Mode,
+  RasterFormat,
+  RasterSettings,
+  VectorSettings,
+  VideoCompressionPreset,
+  VideoFormat,
+  VideoSettings,
+} from './types';
 
 export const ACCEPTED_FILE_TYPES: Record<Mode, string[]> = {
   vector: ['image/svg+xml'],
   raster: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
+  video: ['video/mp4', 'video/webm'],
 };
 
 export const FILE_EXTENSION_TO_FORMAT: Record<string, RasterFormat> = {
@@ -36,3 +45,20 @@ export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
 };
 
 export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['webp', 'avif'];
+
+export const VIDEO_FORMAT_MIME_TYPES: Record<VideoFormat, string> = {
+  mp4: 'video/mp4',
+  webm: 'video/webm',
+};
+
+export const VIDEO_EXTRA_FORMATS: VideoFormat[] = ['mp4'];
+
+export const VIDEO_COMING_SOON_FORMATS: VideoFormat[] = ['webm'];
+
+export const VIDEO_COMPRESSION_PRESETS: VideoCompressionPreset[] = ['high', 'balanced', 'small'];
+
+export const DEFAULT_VIDEO_SETTINGS: VideoSettings = {
+  includeOriginal: true,
+  selectedFormats: [],
+  compressionPreset: 'balanced',
+};

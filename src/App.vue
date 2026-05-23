@@ -24,6 +24,7 @@
           :mode="state.mode.value"
           :raster="state.rasterSettings.value"
           :vector="state.vectorSettings.value"
+          :video="state.videoSettings.value"
           :source-image-size="state.sourceImageSize.value"
           :file-count="state.selectedFiles.value.length"
           @update-raster-quality="state.setRasterQuality"
@@ -37,6 +38,9 @@
           @update-vector-precision="state.setVectorPrecision"
           @update-vector-prettify="state.setVectorPrettify"
           @update-vector-remove-dimensions="state.setVectorRemoveDimensions"
+          @update-video-include-original="state.setVideoIncludeOriginal"
+          @toggle-video-format="state.toggleVideoFormat"
+          @update-video-preset="state.setVideoPreset"
         />
       </div>
 
@@ -66,9 +70,9 @@
   import { usePiktoState } from '@/app/composables/usePiktoState';
   import { buildDownloadName, buildResultsArchive, triggerBlobDownload } from '@/app/utils/download';
   import { filterAcceptedFiles } from '@/app/utils/files';
-  import type { BatchSummary, JobOutput } from '@/app/types';
+  import type { BatchSummary, JobOutput, Mode } from '@/app/types';
   import type { WorkerRequest, WorkerResponse } from '@/app/worker/contracts';
-  import ImageWorker from './app/worker/image.worker?worker';
+  import MediaWorker from './app/worker/media.worker?worker';
   import AppHero from '@/components/AppHero.vue';
   import ModeSwitch from '@/components/ModeSwitch.vue';
   import ResultsPanel from '@/components/ResultsPanel.vue';
@@ -83,6 +87,10 @@
   const plannedOutputCount = computed(() => {
     if (state.mode.value === 'vector') {
       return state.selectedFiles.value.length;
+    }
+
+    if (state.mode.value === 'video') {
+      return state.selectedFiles.value.length * state.videoOutputFormats.value.length;
     }
 
     return state.selectedFiles.value.length * state.outputFormats.value.length;
@@ -121,7 +129,7 @@
 
   function getWorker() {
     if (!worker) {
-      worker = new ImageWorker();
+      worker = new MediaWorker();
     }
 
     return worker;
@@ -141,7 +149,7 @@
       : 'done';
   }
 
-  function handleModeChange(nextMode: 'raster' | 'vector') {
+  function handleModeChange(nextMode: Mode) {
     if (
       nextMode !== state.mode.value &&
       state.selectedFiles.value.length > 0 &&
@@ -157,6 +165,10 @@
     }
 
     state.setMode(nextMode);
+
+    if (nextMode === 'video' && typeof Worker !== 'undefined') {
+      getWorker().postMessage({ type: 'warmup-video' } satisfies WorkerRequest);
+    }
   }
 
   async function handleSelectFiles(files: File[]) {
@@ -205,15 +217,25 @@
             settings: { ...state.vectorSettings.value },
           })),
         }
-      : {
-          type: 'process-raster-batch',
-          jobs: state.selectedFiles.value.map((file, index) => ({
-            id: `raster-${index}`,
-            file: toRaw(file),
-            targetFormats: [...state.outputFormats.value],
-            settings: { ...toRaw(state.rasterSettings.value) },
-          })),
-        };
+      : state.mode.value === 'video'
+        ? {
+            type: 'process-video-batch',
+            jobs: state.selectedFiles.value.map((file, index) => ({
+              id: `video-${index}`,
+              file: toRaw(file),
+              targetFormats: [...state.videoOutputFormats.value],
+              settings: { ...toRaw(state.videoSettings.value) },
+            })),
+          }
+        : {
+            type: 'process-raster-batch',
+            jobs: state.selectedFiles.value.map((file, index) => ({
+              id: `raster-${index}`,
+              file: toRaw(file),
+              targetFormats: [...state.outputFormats.value],
+              settings: { ...toRaw(state.rasterSettings.value) },
+            })),
+          };
 
     const currentWorker = getWorker();
 
