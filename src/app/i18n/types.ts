@@ -36,6 +36,11 @@ export interface Translations {
     prettifyHint: string;
     removeDimensions: string;
     removeDimensionsHint: string;
+    resize: string;
+    resizeWidth: string;
+    resizeHeight: string;
+    resizeOriginal: (w: number, h: number) => string;
+    resizeSingleFileOnly: string;
   };
   uploadPanel: {
     ariaEmpty: string;

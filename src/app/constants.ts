@@ -27,11 +27,12 @@ export const DEFAULT_VECTOR_SETTINGS: VectorSettings = {
 };
 
 export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
-  quality: 78,
+  quality: 75,
   includeOriginal: true,
   selectedFormats: [],
-  webpMethod: 6,
-  avifSpeed: 8,
+  webpMethod: 4,
+  avifSpeed: 6,
+  resize: { width: null, height: null, linked: true },
 };
 
 export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['webp', 'avif'];

@@ -14,6 +14,7 @@
           </span>
         </p>
       </div>
+
       <button
         v-if="summary"
         type="button"
@@ -90,6 +91,7 @@
     if (p >= 15) return 'results-panel__avg-saved--good';
     if (p >= 5) return 'results-panel__avg-saved--ok';
     if (p >= 0) return 'results-panel__avg-saved--neutral';
+
     return 'results-panel__avg-saved--bad';
   });
 
@@ -97,6 +99,7 @@
     if (percent >= 15) return 'results-panel__savings-badge--good';
     if (percent >= 5) return 'results-panel__savings-badge--ok';
     if (percent >= 0) return 'results-panel__savings-badge--neutral';
+
     return 'results-panel__savings-badge--bad';
   }
 </script>

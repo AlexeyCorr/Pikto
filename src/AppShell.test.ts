@@ -11,7 +11,7 @@ describe('App shell', () => {
   it('renders the main workspace sections', () => {
     render(App);
 
-    expect(screen.getByText(/batch image optimization/i)).toBeInTheDocument();
+    expect(screen.getByText(/image optimization/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /raster/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /vector/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /results/i, level: 2 })).toBeInTheDocument();

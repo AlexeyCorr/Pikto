@@ -2,6 +2,7 @@ import { encode as encodeAvif } from '@jsquash/avif';
 import { encode as encodeJpeg } from '@jsquash/jpeg';
 import { optimise as optimisePng } from '@jsquash/oxipng';
 import { encode as encodeWebp } from '@jsquash/webp';
+import resize from '@jsquash/resize';
 import { FILE_EXTENSION_TO_FORMAT, RASTER_FORMAT_MIME_TYPES } from '../constants';
 import { getFileExtension } from '../utils/files';
 import { mapRasterQuality } from '../utils/raster-options';
@@ -37,7 +38,18 @@ export async function encodeRasterFile(
   targetFormat: RasterOutputFormat,
   settings: RasterSettings,
 ) {
-  const imageData = await fileToImageData(file);
+  let imageData = await fileToImageData(file);
+
+  const { width, height } = settings.resize;
+  if (width !== null && width > 0 && height !== null && height > 0) {
+    imageData = await resize(imageData, {
+      width,
+      height,
+      method: 'lanczos3',
+      fitMethod: 'stretch',
+    });
+  }
+
   const effectiveFormat = resolveTargetFormat(file, targetFormat);
   const options = mapRasterQuality(settings);
 

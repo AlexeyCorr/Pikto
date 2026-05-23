@@ -17,18 +17,20 @@ export function usePiktoState() {
   const selectedFiles = ref<File[]>([]);
   const rejectedFiles = ref<RejectedFile[]>([]);
   const vectorSettings = ref({ ...DEFAULT_VECTOR_SETTINGS });
-  const rasterSettings = ref({ ...DEFAULT_RASTER_SETTINGS });
+  const rasterSettings = ref({
+    ...DEFAULT_RASTER_SETTINGS,
+    resize: { ...DEFAULT_RASTER_SETTINGS.resize },
+  });
   const results = ref<JobOutput[]>([]);
   const status = ref<ProcessingStatus>('idle');
   const hasOutdatedResults = ref(false);
+  const sourceImageSize = ref<{ width: number; height: number } | null>(null);
 
   function markResultsOutdated() {
     if (results.value.length === 0) {
       return;
     }
-
     hasOutdatedResults.value = true;
-
     if (status.value === 'done' || status.value === 'partial-success') {
       status.value = 'ready';
     }
@@ -47,7 +49,6 @@ export function usePiktoState() {
     const nextFormats = rasterSettings.value.selectedFormats.includes(value)
       ? rasterSettings.value.selectedFormats.filter((format) => format !== value)
       : [...rasterSettings.value.selectedFormats, value];
-
     rasterSettings.value.selectedFormats = nextFormats;
     markResultsOutdated();
   }
@@ -82,6 +83,38 @@ export function usePiktoState() {
     markResultsOutdated();
   }
 
+  function setResizeWidth(value: number | null) {
+    rasterSettings.value.resize.width = value;
+    if (
+      rasterSettings.value.resize.linked &&
+      sourceImageSize.value &&
+      value !== null &&
+      value > 0
+    ) {
+      const ratio = sourceImageSize.value.height / sourceImageSize.value.width;
+      rasterSettings.value.resize.height = Math.round(value * ratio);
+    }
+    markResultsOutdated();
+  }
+
+  function setResizeHeight(value: number | null) {
+    rasterSettings.value.resize.height = value;
+    if (
+      rasterSettings.value.resize.linked &&
+      sourceImageSize.value &&
+      value !== null &&
+      value > 0
+    ) {
+      const ratio = sourceImageSize.value.width / sourceImageSize.value.height;
+      rasterSettings.value.resize.width = Math.round(value * ratio);
+    }
+    markResultsOutdated();
+  }
+
+  function setResizeLocked(value: boolean) {
+    rasterSettings.value.resize.linked = value;
+  }
+
   function setSelectedFiles(files: File[]) {
     selectedFiles.value = files;
   }
@@ -110,6 +143,14 @@ export function usePiktoState() {
     return rasterSettings.value.includeOriginal ? ['original', ...extra] : [...extra];
   });
 
+  const resizeActive = computed(
+    () =>
+      rasterSettings.value.resize.width !== null &&
+      rasterSettings.value.resize.width > 0 &&
+      rasterSettings.value.resize.height !== null &&
+      rasterSettings.value.resize.height > 0,
+  );
+
   return {
     mode,
     selectedFiles,
@@ -119,13 +160,18 @@ export function usePiktoState() {
     results,
     status,
     hasOutdatedResults,
+    sourceImageSize,
     outputFormats,
+    resizeActive,
     setMode,
     setRasterQuality,
     setIncludeOriginal,
     toggleRasterFormat,
     setWebpMethod,
     setAvifSpeed,
+    setResizeWidth,
+    setResizeHeight,
+    setResizeLocked,
     setVectorPrecision,
     setVectorPrettify,
     setVectorRemoveDimensions,

@@ -4,12 +4,15 @@
       <p>{{ t.runPanel.filesSelected(fileCount) }}</p>
       <p>{{ t.runPanel.outputsPlanned(outputCount) }}</p>
     </div>
+
     <p v-if="hasOutdatedResults" class="run-panel__warning">
       {{ t.runPanel.outdatedWarning }}
     </p>
+
     <button type="button" class="run-panel__button" :disabled="disabled" @click="$emit('run')">
       {{ processing ? t.runPanel.compressing : t.runPanel.compress }}
     </button>
+
     <div v-if="processing && progress" class="run-panel__progress" title="Great Scott!">
       <div class="run-panel__progress-bar">
         <div
@@ -17,6 +20,7 @@
           :style="{ width: `${(progress.completed / progress.total) * 100}%` }"
         ></div>
       </div>
+
       <p class="run-panel__progress-label">{{ progress.completed }} / {{ progress.total }}</p>
     </div>
   </section>

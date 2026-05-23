@@ -8,6 +8,7 @@
           <p class="workspace__eyebrow">{{ t.workspace.eyebrow }}</p>
           <h2 id="workspace-title">{{ t.workspace.title }}</h2>
         </div>
+
         <ModeSwitch :model-value="state.mode.value" @update:model-value="handleModeChange" />
       </div>
 
@@ -23,11 +24,16 @@
           :mode="state.mode.value"
           :raster="state.rasterSettings.value"
           :vector="state.vectorSettings.value"
+          :source-image-size="state.sourceImageSize.value"
+          :file-count="state.selectedFiles.value.length"
           @update-raster-quality="state.setRasterQuality"
           @update-include-original="state.setIncludeOriginal"
           @toggle-raster-format="state.toggleRasterFormat"
           @update-webp-method="state.setWebpMethod"
           @update-avif-speed="state.setAvifSpeed"
+          @update-resize-width="state.setResizeWidth"
+          @update-resize-height="state.setResizeHeight"
+          @update-resize-locked="state.setResizeLocked"
           @update-vector-precision="state.setVectorPrecision"
           @update-vector-prettify="state.setVectorPrettify"
           @update-vector-remove-dimensions="state.setVectorRemoveDimensions"
@@ -153,13 +159,31 @@
     state.setMode(nextMode);
   }
 
-  function handleSelectFiles(files: File[]) {
+  async function handleSelectFiles(files: File[]) {
     const result = filterAcceptedFiles(state.mode.value, files);
     state.setSelectedFiles(result.accepted);
     state.setRejectedFiles(result.rejected);
     state.clearResults();
     state.hasOutdatedResults.value = false;
     state.status.value = result.accepted.length > 0 ? 'ready' : 'idle';
+
+    if (state.mode.value === 'raster' && result.accepted.length === 1) {
+      try {
+        const bitmap = await createImageBitmap(result.accepted[0]);
+        state.sourceImageSize.value = { width: bitmap.width, height: bitmap.height };
+        state.rasterSettings.value.resize.width = bitmap.width;
+        state.rasterSettings.value.resize.height = bitmap.height;
+        bitmap.close();
+      } catch {
+        state.sourceImageSize.value = null;
+        state.rasterSettings.value.resize.width = null;
+        state.rasterSettings.value.resize.height = null;
+      }
+    } else {
+      state.sourceImageSize.value = null;
+      state.rasterSettings.value.resize.width = null;
+      state.rasterSettings.value.resize.height = null;
+    }
   }
 
   function runCompression() {

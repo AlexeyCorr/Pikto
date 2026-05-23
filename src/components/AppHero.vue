@@ -1,9 +1,9 @@
 <template>
   <section class="hero">
     <a v-if="backUrl" :href="backUrl" class="hero__back">
-      <span class="hero__back-arrow" aria-hidden="true">←</span>
       alexeycorr.dev
     </a>
+
     <p class="hero__meta">{{ t.hero.meta }}</p>
     <h1 class="hero__title" title="It's a trap!">Pikto</h1>
     <p class="hero__lead">{{ t.hero.lead }}</p>
@@ -88,15 +88,16 @@
     font-size: 0.8rem;
     text-decoration: none;
     transition: color 0.15s ease, background-color 0.15s ease;
+
+    &::before {
+        font-size: 0.9em;
+        content: '←'
+    }
   }
 
   .hero__back:hover {
     color: var(--text-main-color);
     background-color: var(--surface-3);
-  }
-
-  .hero__back-arrow {
-    font-size: 0.9em;
   }
 
   .hero__meta {

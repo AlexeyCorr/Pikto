@@ -9,6 +9,7 @@
     >
       {{ t.modeSwitch.raster }}
     </button>
+
     <button
       type="button"
       class="mode-switch__button"

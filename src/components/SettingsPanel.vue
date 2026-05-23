@@ -1,24 +1,18 @@
 <template>
   <section class="settings-panel">
     <template v-if="mode === 'raster'">
-      <div class="settings-panel__group">
-        <div class="settings-panel__row">
-          <label for="quality" class="settings-panel__label">{{ t.settingsPanel.quality }}</label>
-          <output class="settings-panel__value">{{ raster.quality }}%</output>
-        </div>
-        <input
-          id="quality"
-          type="range"
-          class="settings-panel__range"
-          min="1"
-          max="100"
-          :value="raster.quality"
-          @input="emit('updateRasterQuality', Number(($event.target as HTMLInputElement).value))"
-        />
-      </div>
+      <RangeControl
+        id="quality"
+        :label="t.settingsPanel.quality"
+        :min="1"
+        :max="100"
+        :model-value="raster.quality"
+        :display-value="`${raster.quality}%`"
+        @update:model-value="emit('updateRasterQuality', $event)"
+      />
 
       <fieldset class="settings-panel__group settings-panel__formats">
-        <legend class="settings-panel__label">{{ t.settingsPanel.outputFormats }}</legend>
+        <legend class="settings-panel__legend">{{ t.settingsPanel.outputFormats }}</legend>
         <div class="settings-panel__format-options">
           <label class="settings-panel__format-option settings-panel__format-option--original">
             <input
@@ -43,86 +37,72 @@
       <details class="settings-panel__advanced">
         <summary class="settings-panel__advanced-summary">{{ t.settingsPanel.advancedCodec }}</summary>
         <div class="settings-panel__advanced-body">
-          <div class="settings-panel__group">
-            <div class="settings-panel__row">
-              <label for="webp-method" class="settings-panel__label">{{ t.settingsPanel.webpEffort }}</label>
-              <output class="settings-panel__value">{{ raster.webpMethod }} / 6</output>
-            </div>
-            <input
-              id="webp-method"
-              type="range"
-              class="settings-panel__range"
-              min="1"
-              max="6"
-              :value="raster.webpMethod"
-              @input="emit('updateWebpMethod', Number(($event.target as HTMLInputElement).value))"
-            />
-            <p class="settings-panel__hint">{{ t.settingsPanel.webpHint }}</p>
-          </div>
+          <RangeControl
+            id="webp-method"
+            :label="t.settingsPanel.webpEffort"
+            :min="1"
+            :max="6"
+            :model-value="raster.webpMethod"
+            :display-value="`${raster.webpMethod} / 6`"
+            :hint="t.settingsPanel.webpHint"
+            @update:model-value="emit('updateWebpMethod', $event)"
+          />
 
-          <div class="settings-panel__group">
-            <div class="settings-panel__row">
-              <label for="avif-speed" class="settings-panel__label">{{ t.settingsPanel.avifSpeed }}</label>
-              <output class="settings-panel__value">{{ raster.avifSpeed }} / 10</output>
-            </div>
-            <input
-              id="avif-speed"
-              type="range"
-              class="settings-panel__range"
-              min="0"
-              max="10"
-              :value="raster.avifSpeed"
-              @input="emit('updateAvifSpeed', Number(($event.target as HTMLInputElement).value))"
+          <RangeControl
+            id="avif-speed"
+            :label="t.settingsPanel.avifSpeed"
+            :min="0"
+            :max="10"
+            :model-value="raster.avifSpeed"
+            :display-value="`${raster.avifSpeed} / 10`"
+            :hint="t.settingsPanel.avifHint"
+            @update:model-value="emit('updateAvifSpeed', $event)"
+          />
+
+          <fieldset class="settings-panel__group settings-panel__formats">
+            <legend class="settings-panel__legend">{{ t.settingsPanel.resize }}</legend>
+            <ResizeControl
+              :width="raster.resize.width"
+              :height="raster.resize.height"
+              :locked="raster.resize.linked"
+              :disabled="fileCount !== 1"
+              @update:width="emit('updateResizeWidth', $event)"
+              @update:height="emit('updateResizeHeight', $event)"
+              @update:locked="emit('updateResizeLocked', $event)"
             />
-            <p class="settings-panel__hint">{{ t.settingsPanel.avifHint }}</p>
-          </div>
+          </fieldset>
         </div>
       </details>
     </template>
 
     <template v-else>
-      <div class="settings-panel__group">
-        <div class="settings-panel__row">
-          <label for="precision" class="settings-panel__label">{{ t.settingsPanel.coordPrecision }}</label>
-          <output class="settings-panel__value">{{ vector.numberPrecision }}</output>
-        </div>
-        <input
-          id="precision"
-          type="range"
-          class="settings-panel__range"
-          min="0"
-          max="8"
-          :value="vector.numberPrecision"
-          @input="emit('updateVectorPrecision', Number(($event.target as HTMLInputElement).value))"
-        />
-        <p class="settings-panel__hint">{{ t.settingsPanel.precisionHint }}</p>
-      </div>
+      <RangeControl
+        id="precision"
+        :label="t.settingsPanel.coordPrecision"
+        :min="0"
+        :max="8"
+        :model-value="vector.numberPrecision"
+        :display-value="`${vector.numberPrecision}`"
+        :hint="t.settingsPanel.precisionHint"
+        @update:model-value="emit('updateVectorPrecision', $event)"
+      />
 
       <fieldset class="settings-panel__group settings-panel__formats">
-        <legend class="settings-panel__label">{{ t.settingsPanel.options }}</legend>
+        <legend class="settings-panel__legend">{{ t.settingsPanel.options }}</legend>
         <div class="settings-panel__svg-options">
-          <label class="settings-panel__svg-option">
-            <input
-              type="checkbox"
-              :checked="vector.prettifyMarkup"
-              @change="emit('updateVectorPrettify', ($event.target as HTMLInputElement).checked)"
-            />
-            <span>
-              <span class="settings-panel__svg-option-name">{{ t.settingsPanel.prettifyMarkup }}</span>
-              <span class="settings-panel__hint">{{ t.settingsPanel.prettifyHint }}</span>
-            </span>
-          </label>
-          <label class="settings-panel__svg-option">
-            <input
-              type="checkbox"
-              :checked="vector.removeDimensions"
-              @change="emit('updateVectorRemoveDimensions', ($event.target as HTMLInputElement).checked)"
-            />
-            <span>
-              <span class="settings-panel__svg-option-name">{{ t.settingsPanel.removeDimensions }}</span>
-              <span class="settings-panel__hint">{{ t.settingsPanel.removeDimensionsHint }}</span>
-            </span>
-          </label>
+          <CheckboxOption
+            :model-value="vector.prettifyMarkup"
+            :name="t.settingsPanel.prettifyMarkup"
+            :hint="t.settingsPanel.prettifyHint"
+            @update:model-value="emit('updateVectorPrettify', $event)"
+          />
+
+          <CheckboxOption
+            :model-value="vector.removeDimensions"
+            :name="t.settingsPanel.removeDimensions"
+            :hint="t.settingsPanel.removeDimensionsHint"
+            @update:model-value="emit('updateVectorRemoveDimensions', $event)"
+          />
         </div>
       </fieldset>
     </template>
@@ -138,11 +118,16 @@
     RasterSettings,
     VectorSettings,
   } from '@/app/types';
+  import RangeControl from './RangeControl.vue';
+  import CheckboxOption from './CheckboxOption.vue';
+  import ResizeControl from './ResizeControl.vue';
 
   defineProps<{
     mode: Mode;
     raster: RasterSettings;
     vector: VectorSettings;
+    sourceImageSize: { width: number; height: number } | null;
+    fileCount: number;
   }>();
 
   const emit = defineEmits<{
@@ -151,6 +136,9 @@
     toggleRasterFormat: [value: RasterFormat];
     updateWebpMethod: [value: number];
     updateAvifSpeed: [value: number];
+    updateResizeWidth: [value: number | null];
+    updateResizeHeight: [value: number | null];
+    updateResizeLocked: [value: boolean];
     updateVectorPrecision: [value: number];
     updateVectorPrettify: [value: boolean];
     updateVectorRemoveDimensions: [value: boolean];
@@ -168,37 +156,13 @@
     gap: 10px;
   }
 
-  .settings-panel__row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .settings-panel__label {
+  .settings-panel__legend {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.85rem;
     color: var(--text-secondary-color);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-  }
-
-  .settings-panel__value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    color: var(--text-main-color);
-  }
-
-  .settings-panel__range {
-    width: 100%;
-    accent-color: var(--accent-color);
-  }
-
-  .settings-panel__hint {
-    margin: 0;
-    font-size: 0.78rem;
-    color: var(--text-secondary-color);
-    opacity: 0.75;
+    padding: 0 6px;
   }
 
   .settings-panel__formats {
@@ -206,10 +170,6 @@
     border-radius: var(--radius-md);
     padding: var(--space-2);
     margin: 0;
-  }
-
-  .settings-panel__formats legend {
-    padding: 0 6px;
   }
 
   .settings-panel__format-options {
@@ -242,31 +202,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
-
-  .settings-panel__svg-option {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    cursor: pointer;
-  }
-
-  .settings-panel__svg-option input[type='checkbox'] {
-    margin-top: 2px;
-    flex-shrink: 0;
-    accent-color: var(--accent-color);
-  }
-
-  .settings-panel__svg-option span {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .settings-panel__svg-option-name {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    color: var(--text-main-color);
   }
 
   .settings-panel__advanced {

@@ -27,12 +27,19 @@ export interface VectorSettings {
   removeDimensions: boolean;
 }
 
+export interface RasterResizeSettings {
+  width: number | null;
+  height: number | null;
+  linked: boolean;
+}
+
 export interface RasterSettings {
   quality: number;
   includeOriginal: boolean;
   selectedFormats: RasterFormat[];
   webpMethod: number;
   avifSpeed: number;
+  resize: RasterResizeSettings;
 }
 
 export interface JobOutput {

@@ -6,8 +6,8 @@ function pluralEn(n: number, one: string, many: string): string {
 
 export const en: Translations = {
   hero: {
-    meta: 'tool = "batch image optimization" // v1.21',
-    lead: 'Prepare web-ready image assets in your browser with vector and raster batch compression.',
+    meta: 'tool = "image optimization" // v1.21',
+    lead: 'Prepare web-ready image assets in your browser with vector and raster.',
   },
   workspace: {
     eyebrow: 'Workspace',
@@ -42,6 +42,11 @@ export const en: Translations = {
     prettifyHint: 'Indent and format the output SVG source',
     removeDimensions: 'Remove fixed dimensions',
     removeDimensionsHint: 'Strip width/height, derive viewBox from them if missing',
+    resize: 'Resize',
+    resizeWidth: 'W',
+    resizeHeight: 'H',
+    resizeOriginal: (w, h) => `Original: ${w} × ${h}`,
+    resizeSingleFileOnly: 'Available for single file only',
   },
   uploadPanel: {
     ariaEmpty: 'Drop files here or click to choose',

@@ -11,12 +11,12 @@ function pluralRu(n: number, one: string, few: string, many: string): string {
 
 export const ru: Translations = {
   hero: {
-    meta: 'инструмент = "пакетная оптимизация изображений" // v1.21',
-    lead: 'Подготовьте веб-ресурсы прямо в браузере — векторные и растровые файлы, пакетное сжатие.',
+    meta: 'инструмент = "оптимизация изображений" // v1.21',
+    lead: 'Подготовьте веб-ресурсы прямо в браузере — векторные и растровые файлы.',
   },
   workspace: {
     eyebrow: 'Рабочее пространство',
-    title: 'Выберите режим и сожмите файлы пакетом',
+    title: 'Выберите режим и сожмите файлы',
     modeChangeConfirm: 'Смена режима очистит текущую подборку файлов. Продолжить?',
   },
   modeSwitch: {
@@ -47,6 +47,11 @@ export const ru: Translations = {
     prettifyHint: 'Отступы и форматирование выходного SVG',
     removeDimensions: 'Убрать фиксированные размеры',
     removeDimensionsHint: 'Удалить width/height, вывести viewBox из них если отсутствует',
+    resize: 'Размер',
+    resizeWidth: 'Ш',
+    resizeHeight: 'В',
+    resizeOriginal: (w, h) => `Оригинал: ${w} × ${h}`,
+    resizeSingleFileOnly: 'Доступно только для одного файла',
   },
   uploadPanel: {
     ariaEmpty: 'Перетащите файлы или нажмите для выбора',
