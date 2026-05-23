@@ -72,7 +72,7 @@ export const ru: Translations = {
     addMore: 'Добавить ещё',
     svgOnly: 'Только SVG',
     rasterFormats: 'JPG, PNG, WebP, AVIF',
-    videoFormats: 'MP4, WEBM',
+    videoFormats: 'MP4',
     dropToAdd: 'Отпустите для добавления',
     filesSelected: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')}`,
     changeSelection: 'Изменить выбор',

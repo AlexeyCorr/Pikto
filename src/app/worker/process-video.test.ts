@@ -24,6 +24,7 @@ vi.mock('@ffmpeg/ffmpeg', () => ({
 
 vi.mock('@ffmpeg/util', () => ({
   fetchFile: vi.fn(async () => new Uint8Array([7, 8, 9])),
+  toBlobURL: vi.fn(async (url: string) => `blob:${url}`),
 }));
 
 import { encodeVideoFile, getVideoCommandArgs, getVideoOutputFormat } from './process-video';
@@ -64,22 +65,20 @@ describe('getVideoCommandArgs', () => {
     ]);
   });
 
-  it('builds webm transcode args for the small preset', () => {
+  it('builds webm transcode args for the small preset using VP8', () => {
     expect(getVideoCommandArgs('output.webm', 'webm', 'small')).toEqual([
       '-map_metadata', '-1',
       '-map_chapters', '-1',
       '-dn',
       '-sn',
-      '-c:v', 'libvpx-vp9',
+      '-c:v', 'libvpx',
       '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
       '-pix_fmt', 'yuv420p',
-      '-crf', '50',
-      '-b:v', '0',
-      '-lag-in-frames', '0',
-      '-auto-alt-ref', '0',
+      '-b:v', '600k',
       '-avoid_negative_ts', 'make_zero',
       '-deadline', 'good',
-      '-cpu-used', '4',
+      '-cpu-used', '5',
+      '-threads', '1',
       '-c:a', 'libvorbis',
       '-b:a', '128k',
       'output.webm',
@@ -88,7 +87,7 @@ describe('getVideoCommandArgs', () => {
 });
 
 describe('encodeVideoFile', () => {
-  it('loads ffmpeg from bundled local assets', async () => {
+  it('loads ffmpeg-core from CDN via blob URLs, worker from local bundle', async () => {
     await encodeVideoFile(mp4File, 'original', 'balanced');
 
     expect(ffmpegMock.load).toHaveBeenCalledWith({
@@ -121,68 +120,16 @@ describe('encodeVideoFile', () => {
     expect(ffmpegMock.off).toHaveBeenCalledWith('progress', expect.any(Function));
   });
 
-  it('retries webm encoding with a low-memory fallback when the default webm strategy fails with wasm bounds error', async () => {
-    ffmpegMock.exec
-      .mockRejectedValueOnce('RuntimeError: index out of bounds')
-      .mockResolvedValueOnce(0);
-
-    await encodeVideoFile(webmFile, 'original', 'balanced');
-
-    expect(ffmpegMock.exec).toHaveBeenCalledTimes(2);
-    expect(ffmpegMock.exec.mock.calls[0]?.[0]).toEqual([
-      '-fflags', '+genpts',
-      '-i',
-      'input.webm',
-      '-map_metadata', '-1',
-      '-map_chapters', '-1',
-      '-dn',
-      '-sn',
-      '-c:v', 'libvpx-vp9',
-      '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-      '-pix_fmt', 'yuv420p',
-      '-crf', '36',
-      '-b:v', '0',
-      '-lag-in-frames', '0',
-      '-auto-alt-ref', '0',
-      '-avoid_negative_ts', 'make_zero',
-      '-deadline', 'good',
-      '-cpu-used', '4',
-      '-c:a', 'libvorbis',
-      '-b:a', '128k',
-      'output.webm',
-    ]);
-    expect(ffmpegMock.exec.mock.calls[1]?.[0]).toEqual([
-      '-fflags', '+genpts',
-      '-i',
-      'input.webm',
-      '-map_metadata', '-1',
-      '-map_chapters', '-1',
-      '-dn',
-      '-sn',
-      '-c:v', 'libvpx',
-      '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', '800k',
-      '-avoid_negative_ts', 'make_zero',
-      '-deadline', 'realtime',
-      '-cpu-used', '5',
-      '-threads', '1',
-      '-c:a', 'libvorbis',
-      '-b:a', '128k',
-      'output.webm',
-    ]);
-  });
-
-  it('includes recent ffmpeg logs in the error when every webm strategy fails', async () => {
-    ffmpegMock.exec.mockRejectedValue('RuntimeError: index out of bounds');
+  it('includes recent ffmpeg logs in the error when encoding fails', async () => {
+    ffmpegMock.exec.mockRejectedValue(new Error('something went wrong'));
     ffmpegMock.on.mockImplementation((event: string, handler: (payload: { message: string }) => void) => {
       if (event === 'log') {
-        handler({ message: 'libvpx init failed' });
+        handler({ message: 'encoder init failed' });
       }
     });
 
-    await expect(encodeVideoFile(webmFile, 'original', 'balanced')).rejects.toThrow(
-      'ffmpeg exec failed: RuntimeError: index out of bounds | ffmpeg log: libvpx init failed',
+    await expect(encodeVideoFile(mp4File, 'original', 'balanced')).rejects.toThrow(
+      'ffmpeg exec failed: something went wrong | ffmpeg log: encoder init failed',
     );
   });
 });

@@ -67,7 +67,7 @@ export const en: Translations = {
     addMore: 'Add more',
     svgOnly: 'SVG only',
     rasterFormats: 'JPG, PNG, WebP, AVIF',
-    videoFormats: 'MP4, WEBM',
+    videoFormats: 'MP4',
     dropToAdd: 'Drop to add',
     filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')}`,
     changeSelection: 'Change selection',

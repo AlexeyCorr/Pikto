@@ -11,7 +11,7 @@ import type {
 export const ACCEPTED_FILE_TYPES: Record<Mode, string[]> = {
   vector: ['image/svg+xml'],
   raster: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
-  video: ['video/mp4', 'video/webm'],
+  video: ['video/mp4'],
 };
 
 export const FILE_EXTENSION_TO_FORMAT: Record<string, RasterFormat> = {
