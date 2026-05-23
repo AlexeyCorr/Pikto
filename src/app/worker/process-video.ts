@@ -17,8 +17,14 @@ const VIDEO_CODEC_ARGS = ['-vf', WEBM_VIDEO_FILTER, '-pix_fmt', 'yuv420p'];
 const AUDIO_ARGS = ['-c:a', 'libvorbis', '-b:a', '128k'];
 
 function resolveSourceFormat(file: File): VideoFormat {
-  if (file.type === 'video/webm') return 'webm';
-  if (file.type === 'video/mp4') return 'mp4';
+  if (file.type === 'video/webm') {
+    return 'webm';
+  }
+
+  if (file.type === 'video/mp4') {
+    return 'mp4';
+  }
+
   return getFileExtension(file.name) === 'webm' ? 'webm' : 'mp4';
 }
 
