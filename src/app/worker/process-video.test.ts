@@ -31,6 +31,7 @@ import { encodeVideoFile, getVideoCommandArgs, getVideoOutputFormat } from './pr
 
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
 const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
+const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
 
 beforeEach(() => {
   ffmpegMock.load.mockReset().mockImplementation(async () => undefined);
@@ -50,6 +51,15 @@ describe('getVideoOutputFormat', () => {
 
   it('returns the explicit target format when requested', () => {
     expect(getVideoOutputFormat(mp4File, 'webm')).toBe('webm');
+  });
+
+  it('detects avi source when target is original', () => {
+    expect(getVideoOutputFormat(aviFile, 'original')).toBe('avi');
+  });
+
+  it('falls back to avi via extension when mime is generic', () => {
+    const aviByExtension = new File(['avi'], 'clip.avi', { type: 'application/octet-stream' });
+    expect(getVideoOutputFormat(aviByExtension, 'original')).toBe('avi');
   });
 });
 
@@ -82,6 +92,17 @@ describe('getVideoCommandArgs', () => {
       '-c:a', 'libvorbis',
       '-b:a', '128k',
       'output.webm',
+    ]);
+  });
+
+  it('builds avi transcode args for the balanced preset', () => {
+    expect(getVideoCommandArgs('output.avi', 'avi', 'balanced')).toEqual([
+      '-c:v', 'libx264',
+      '-preset', 'veryfast',
+      '-crf', '28',
+      '-c:a', 'libmp3lame',
+      '-b:a', '128k',
+      'output.avi',
     ]);
   });
 });

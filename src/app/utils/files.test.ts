@@ -6,6 +6,7 @@ const pngFile = new File(['png'], 'cover.png', { type: 'image/png' });
 const txtFile = new File(['hello'], 'notes.txt', { type: 'text/plain' });
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
 const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
+const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
 
 describe('filterAcceptedFiles', () => {
   it('accepts only svg files in vector mode', () => {
@@ -22,11 +23,11 @@ describe('filterAcceptedFiles', () => {
     expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'notes.txt']);
   });
 
-  it('accepts supported video files in video mode', () => {
-    const result = filterAcceptedFiles('video', [svgFile, mp4File, webmFile, txtFile]);
+  it('accepts mp4 and avi files in video mode', () => {
+    const result = filterAcceptedFiles('video', [svgFile, mp4File, webmFile, aviFile, txtFile]);
 
-    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.webm']);
-    expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'notes.txt']);
+    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.avi']);
+    expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'clip.webm', 'notes.txt']);
   });
 });
 

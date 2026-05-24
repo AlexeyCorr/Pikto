@@ -17,15 +17,14 @@ const VIDEO_CODEC_ARGS = ['-vf', WEBM_VIDEO_FILTER, '-pix_fmt', 'yuv420p'];
 const AUDIO_ARGS = ['-c:a', 'libvorbis', '-b:a', '128k'];
 
 function resolveSourceFormat(file: File): VideoFormat {
-  if (file.type === 'video/webm') {
-    return 'webm';
-  }
+  if (file.type === 'video/webm') return 'webm';
+  if (file.type === 'video/mp4')  return 'mp4';
+  if (file.type === 'video/x-msvideo') return 'avi';
 
-  if (file.type === 'video/mp4') {
-    return 'mp4';
-  }
-
-  return getFileExtension(file.name) === 'webm' ? 'webm' : 'mp4';
+  const ext = getFileExtension(file.name);
+  if (ext === 'webm') return 'webm';
+  if (ext === 'avi')  return 'avi';
+  return 'mp4';
 }
 
 export function getVideoOutputFormat(file: File, targetFormat: VideoOutputFormat): VideoFormat {
@@ -48,6 +47,18 @@ export function getVideoCommandArgs(
       '-crf', MP4_CRF[preset],
       '-c:a', 'copy',
       '-movflags', '+faststart',
+      outputName,
+    ];
+  }
+
+  if (targetFormat === 'avi') {
+    // AVI container does not support AAC — use mp3 audio instead
+    return [
+      '-c:v', 'libx264',
+      '-preset', 'veryfast',
+      '-crf', MP4_CRF[preset],
+      '-c:a', 'libmp3lame',
+      '-b:a', '128k',
       outputName,
     ];
   }

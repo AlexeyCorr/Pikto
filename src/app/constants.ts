@@ -17,7 +17,7 @@ export const MAX_FILE_SIZE: Record<Mode, number> = {
 export const ACCEPTED_FILE_TYPES: Record<Mode, string[]> = {
   vector: ['image/svg+xml'],
   raster: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
-  video: ['video/mp4'],
+  video: ['video/mp4', 'video/x-msvideo'],
 };
 
 export const FILE_EXTENSION_TO_FORMAT: Record<string, RasterFormat> = {
@@ -55,9 +55,10 @@ export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['webp', 'avif'];
 export const VIDEO_FORMAT_MIME_TYPES: Record<VideoFormat, string> = {
   mp4: 'video/mp4',
   webm: 'video/webm',
+  avi: 'video/x-msvideo',
 };
 
-export const VIDEO_EXTRA_FORMATS: VideoFormat[] = ['mp4'];
+export const VIDEO_EXTRA_FORMATS: VideoFormat[] = ['mp4', 'avi'];
 
 export const VIDEO_COMING_SOON_FORMATS: VideoFormat[] = ['webm'];
 

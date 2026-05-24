@@ -4,7 +4,7 @@ export type RasterFormat = 'jpg' | 'png' | 'webp' | 'avif';
 
 export type RasterOutputFormat = RasterFormat | 'original';
 
-export type VideoFormat = 'mp4' | 'webm';
+export type VideoFormat = 'mp4' | 'webm' | 'avi';
 
 export type VideoOutputFormat = VideoFormat | 'original';
 
