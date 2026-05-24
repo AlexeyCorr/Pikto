@@ -1,9 +1,9 @@
 import type { RasterSettings } from '../types';
 
 export function mapRasterQuality(settings: RasterSettings) {
-  const quality = Math.min(100, Math.max(1, settings.quality));
-  const webpMethod = Math.min(6, Math.max(0, settings.webpMethod));
-  const avifSpeed = Math.min(10, Math.max(0, settings.avifSpeed));
+  const quality    = Math.min(100, Math.max(1, settings.quality));
+  const webpMethod = Math.min(6,   Math.max(0, settings.webpMethod));
+  const avifEffort = Math.min(10,  Math.max(0, settings.avifEffort));
 
   // WebP and AVIF quality scales differ from JPEG perceptually.
   // The same numeric quality produces higher visual fidelity (and larger files)
@@ -27,7 +27,7 @@ export function mapRasterQuality(settings: RasterSettings) {
     },
     avif: {
       quality: avifQuality,
-      speed: avifSpeed,
+      speed: 10 - avifEffort,  // higher effort → lower speed → better quality
     },
     png: {
       level: quality > 80 ? 4 : quality > 55 ? 3 : 2,

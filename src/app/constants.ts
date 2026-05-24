@@ -46,7 +46,7 @@ export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
   includeOriginal: true,
   selectedFormats: [],
   webpMethod: 4,
-  avifSpeed: 6,
+  avifEffort: 4,
   resize: { width: null, height: null, linked: true },
 };
 

@@ -17,7 +17,7 @@ describe('SettingsPanel', () => {
           includeOriginal: true,
           selectedFormats: [],
           webpMethod: 4,
-          avifSpeed: 6,
+          avifEffort: 4,
           resize: { width: null, height: null, linked: true },
         },
         vector: {

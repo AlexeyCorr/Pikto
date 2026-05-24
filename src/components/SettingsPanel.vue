@@ -49,14 +49,14 @@
           />
 
           <RangeControl
-            id="avif-speed"
-            :label="t.settingsPanel.avifSpeed"
+            id="avif-effort"
+            :label="t.settingsPanel.avifEffort"
             :min="0"
             :max="10"
-            :model-value="raster.avifSpeed"
-            :display-value="`${raster.avifSpeed} / 10`"
+            :model-value="raster.avifEffort"
+            :display-value="`${raster.avifEffort} / 10`"
             :hint="t.settingsPanel.avifHint"
-            @update:model-value="emit('updateAvifSpeed', $event)"
+            @update:model-value="emit('updateAvifEffort', $event)"
           />
 
           <fieldset class="settings-panel__group settings-panel__formats">
@@ -189,7 +189,7 @@
     updateIncludeOriginal: [value: boolean];
     toggleRasterFormat: [value: RasterFormat];
     updateWebpMethod: [value: number];
-    updateAvifSpeed: [value: number];
+    updateAvifEffort: [value: number];
     updateResizeWidth: [value: number | null];
     updateResizeHeight: [value: number | null];
     updateResizeLocked: [value: boolean];

@@ -68,8 +68,8 @@ export function usePiktoState() {
     markResultsOutdated();
   }
 
-  function setAvifSpeed(value: number) {
-    rasterSettings.value.avifSpeed = value;
+  function setAvifEffort(value: number) {
+    rasterSettings.value.avifEffort = value;
     markResultsOutdated();
   }
 
@@ -210,7 +210,7 @@ export function usePiktoState() {
     setIncludeOriginal,
     toggleRasterFormat,
     setWebpMethod,
-    setAvifSpeed,
+    setAvifEffort,
     setResizeWidth,
     setResizeHeight,
     setResizeLocked,

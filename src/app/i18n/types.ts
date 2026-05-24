@@ -31,7 +31,7 @@ export interface Translations {
     advancedCodec: string;
     webpEffort: string;
     webpHint: string;
-    avifSpeed: string;
+    avifEffort: string;
     avifHint: string;
     coordPrecision: string;
     precisionHint: string;

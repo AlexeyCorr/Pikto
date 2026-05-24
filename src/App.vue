@@ -37,7 +37,7 @@
             @update-include-original="state.setIncludeOriginal"
             @toggle-raster-format="state.toggleRasterFormat"
             @update-webp-method="state.setWebpMethod"
-            @update-avif-speed="state.setAvifSpeed"
+            @update-avif-effort="state.setAvifEffort"
             @update-resize-width="state.setResizeWidth"
             @update-resize-height="state.setResizeHeight"
             @update-resize-locked="state.setResizeLocked"

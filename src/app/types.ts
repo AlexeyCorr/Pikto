@@ -50,7 +50,7 @@ export interface RasterSettings {
   includeOriginal: boolean;
   selectedFormats: RasterFormat[];
   webpMethod: number;
-  avifSpeed: number;
+  avifEffort: number;
   resize: RasterResizeSettings;
 }
 
