@@ -12,7 +12,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   try {
     if (event.data.type === 'process-vector-batch') {
       const total = event.data.jobs.length;
-      ctx.postMessage({ type: 'progress', completed: 0, total } satisfies WorkerResponse);
+      ctx.postMessage({ type: 'progress', completed: 0, total, itemProgress: 0 } satisfies WorkerResponse);
       const results: JobOutput[] = [];
 
       for (const [index, job] of event.data.jobs.entries()) {
@@ -33,7 +33,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           status: 'success',
         });
 
-        const progress: WorkerResponse = { type: 'progress', completed: index + 1, total };
+        const progress: WorkerResponse = { type: 'progress', completed: index + 1, total, itemProgress: 0 };
         ctx.postMessage(progress);
       }
 
@@ -43,7 +43,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
     if (event.data.type === 'process-raster-batch') {
       const total = event.data.jobs.reduce((sum, job) => sum + job.targetFormats.length, 0);
-      ctx.postMessage({ type: 'progress', completed: 0, total } satisfies WorkerResponse);
+      ctx.postMessage({ type: 'progress', completed: 0, total, itemProgress: 0 } satisfies WorkerResponse);
       const results: JobOutput[] = [];
       let completed = 0;
 
@@ -82,7 +82,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           }
 
           completed += 1;
-          ctx.postMessage({ type: 'progress', completed, total } satisfies WorkerResponse);
+          ctx.postMessage({ type: 'progress', completed, total, itemProgress: 0 } satisfies WorkerResponse);
         }
       }
 
@@ -97,14 +97,13 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
     if (event.data.type === 'process-video-batch') {
       const total = event.data.jobs.reduce((sum, job) => sum + job.targetFormats.length, 0);
-      ctx.postMessage({ type: 'progress', completed: 0, total } satisfies WorkerResponse);
+      ctx.postMessage({ type: 'progress', completed: 0, total, itemProgress: 0 } satisfies WorkerResponse);
       const results: JobOutput[] = [];
       let completed = 0;
 
       for (const [jobIndex, job] of event.data.jobs.entries()) {
         for (const targetFormat of job.targetFormats) {
           const effectiveFormat = getVideoOutputFormat(job.file, targetFormat);
-          const baseCompleted = completed;
 
           try {
             const blob = await encodeVideoFile(
@@ -114,8 +113,9 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
               (progress) => {
                 ctx.postMessage({
                   type: 'progress',
-                  completed: Math.min(total, baseCompleted + progress),
+                  completed,
                   total,
+                  itemProgress: progress,
                 } satisfies WorkerResponse);
               },
             );
@@ -148,7 +148,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           }
 
           completed += 1;
-          ctx.postMessage({ type: 'progress', completed, total } satisfies WorkerResponse);
+          ctx.postMessage({ type: 'progress', completed, total, itemProgress: 0 } satisfies WorkerResponse);
         }
       }
 

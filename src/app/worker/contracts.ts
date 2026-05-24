@@ -34,6 +34,12 @@ export type WorkerRequest =
   | { type: 'warmup-video' };
 
 export type WorkerResponse =
-  | { type: 'progress'; completed: number; total: number }
+  | {
+      type: 'progress';
+      completed: number;
+      total: number;
+      /** Sub-item progress in range [0, 1). Always 0 for atomic items (raster, vector). */
+      itemProgress: number;
+    }
   | { type: 'done'; results: JobOutput[] }
   | { type: 'error'; message: string };

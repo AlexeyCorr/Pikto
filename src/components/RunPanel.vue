@@ -15,14 +15,14 @@
 
     <div v-if="processing && progress" class="run-panel__progress" title="Great Scott!">
       <div class="run-panel__progress-header">
-        <span class="run-panel__progress-pct">{{ Math.round((progress.completed / progress.total) * 100) }}%</span>
+        <span class="run-panel__progress-pct">{{ Math.round(progressPct) }}%</span>
         <span class="run-panel__progress-count">{{ progress.completed }} / {{ progress.total }}</span>
       </div>
 
       <div class="run-panel__progress-bar">
         <div
           class="run-panel__progress-fill"
-          :style="{ width: `${(progress.completed / progress.total) * 100}%` }"
+          :style="{ width: `${progressPct}%` }"
         ></div>
       </div>
     </div>
@@ -30,20 +30,26 @@
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue';
   import { t } from '@/app/i18n';
 
-  defineProps<{
+  const props = defineProps<{
     fileCount: number;
     outputCount: number;
     disabled: boolean;
     processing: boolean;
     hasOutdatedResults: boolean;
-    progress: { completed: number; total: number } | null;
+    progress: { completed: number; total: number; itemProgress: number } | null;
   }>();
 
   defineEmits<{
     run: [];
   }>();
+
+  const progressPct = computed(() => {
+    if (!props.progress || props.progress.total === 0) return 0;
+    return ((props.progress.completed + props.progress.itemProgress) / props.progress.total) * 100;
+  });
 </script>
 
 <style>
@@ -73,6 +79,11 @@
 
   .run-panel__warning {
     color: var(--accent-text-color);
+
+    @media (min-width: 768px) {
+      grid-column: 1/-1;
+      grid-row: 2/3;
+    }
   }
 
   .run-panel__button {

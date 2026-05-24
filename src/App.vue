@@ -94,7 +94,7 @@
   import UploadPanel from '@/components/UploadPanel.vue';
 
   const state = usePiktoState();
-  const workerProgress = ref<{ completed: number; total: number } | null>(null);
+  const workerProgress = ref<{ completed: number; total: number; itemProgress: number } | null>(null);
   const resultsPanelRef = ref<InstanceType<typeof ResultsPanel> | null>(null);
   let worker: Worker | null = null;
   let selectRequestId = 0;
@@ -271,7 +271,11 @@
 
     currentWorker.onmessage = (event: MessageEvent<WorkerResponse>) => {
       if (event.data.type === 'progress') {
-        workerProgress.value = { completed: event.data.completed, total: event.data.total };
+        workerProgress.value = {
+          completed: event.data.completed,
+          total: event.data.total,
+          itemProgress: event.data.itemProgress,
+        };
       }
 
       if (event.data.type === 'done') {
