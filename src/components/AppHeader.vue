@@ -85,6 +85,8 @@
 
 <style>
   .app-header {
+    position: relative;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;

@@ -59,7 +59,7 @@
   .mode-switch__button {
     border: 0;
     border-radius: 999px;
-    padding: 9px 18px;
+    padding: 9px 16px;
     background: transparent;
     color: var(--text-secondary-color);
     font-family: 'JetBrains Mono', monospace;

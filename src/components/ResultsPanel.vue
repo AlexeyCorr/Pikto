@@ -109,11 +109,15 @@
   .results-panel {
     display: grid;
     gap: var(--space-3);
-    padding: var(--space-4);
+    padding: var(--space-1);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     background: var(--card-bg-color);
     box-shadow: var(--shadow-soft);
+
+    @media (min-width: 768px) {
+      padding: var(--space-4);
+    }
   }
 
   .results-panel__header {
@@ -202,6 +206,7 @@
 
   .results-panel__row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     padding: 8px 12px;

@@ -13,7 +13,7 @@
       {{ processing ? t.runPanel.compressing : t.runPanel.compress }}
     </button>
 
-    <div v-if="processing && progress" class="run-panel__progress" title="Great Scott!">
+    <div v-if="processing && progress" class="run-panel__progress">
       <div class="run-panel__progress-header">
         <span class="run-panel__progress-pct">{{ Math.round(progressPct) }}%</span>
         <span class="run-panel__progress-count">{{ progress.completed }} / {{ progress.total }}</span>
@@ -89,7 +89,7 @@
   .run-panel__button {
     justify-self: start;
     min-height: 4rem;
-    min-width: 16rem;
+    width: 100%;
     border: 0;
     border-radius: 999px;
     padding: 14px 32px;
@@ -107,6 +107,7 @@
 
     @media (min-width: 768px) {
       grid-column: 2/3;
+      min-width: 16rem;
     }
   }
 
