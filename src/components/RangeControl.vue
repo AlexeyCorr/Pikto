@@ -4,6 +4,7 @@
       <label :for="id" class="range-control__label">{{ label }}</label>
       <output class="range-control__value">{{ displayValue }}</output>
     </div>
+
     <input
       :id="id"
       type="range"
@@ -36,7 +37,7 @@
 <style>
   .range-control {
     display: grid;
-    gap: 10px;
+    gap: 4px;
   }
 
   .range-control__row {

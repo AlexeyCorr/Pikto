@@ -1,6 +1,6 @@
 <template>
   <header class="app-header">
-    <a href="https://alexeycorr.dev" class="app-header__logo">~/alexeycorr.dev</a>
+    <a href="https://alexeycorr.dev" class="app-header__logo">~/alexeycorr</a>
 
     <nav class="app-header__nav" aria-label="Site navigation">
       <div class="app-header__locale" role="group" aria-label="Language">
@@ -63,7 +63,8 @@
   });
 
   onMounted(() => {
-    const saved = localStorage.getItem('pikto-theme') as 'light' | 'dark' | null;
+    const saved = localStorage.getItem('currentTheme') as 'light' | 'dark' | null;
+
     if (saved) {
       theme.value = saved;
       document.body.dataset.theme = saved;
@@ -74,7 +75,7 @@
     const next = isDark.value ? 'light' : 'dark';
     theme.value = next;
     document.body.dataset.theme = next;
-    localStorage.setItem('pikto-theme', next);
+    localStorage.setItem('currentTheme', next);
   }
 
   function switchLocale(l: Locale) {

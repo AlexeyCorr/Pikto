@@ -12,6 +12,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   try {
     if (event.data.type === 'process-vector-batch') {
       const total = event.data.jobs.length;
+      ctx.postMessage({ type: 'progress', completed: 0, total } satisfies WorkerResponse);
       const results: JobOutput[] = [];
 
       for (const [index, job] of event.data.jobs.entries()) {
@@ -41,6 +42,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
     if (event.data.type === 'process-raster-batch') {
       const total = event.data.jobs.reduce((sum, job) => sum + job.targetFormats.length, 0);
+      ctx.postMessage({ type: 'progress', completed: 0, total } satisfies WorkerResponse);
       const results: JobOutput[] = [];
       let completed = 0;
 

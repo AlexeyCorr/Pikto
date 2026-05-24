@@ -18,6 +18,7 @@
         <span class="run-panel__progress-pct">{{ Math.round((progress.completed / progress.total) * 100) }}%</span>
         <span class="run-panel__progress-count">{{ progress.completed }} / {{ progress.total }}</span>
       </div>
+
       <div class="run-panel__progress-bar">
         <div
           class="run-panel__progress-fill"
@@ -53,6 +54,10 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     background: var(--surface-2);
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr auto;
+    }
   }
 
   .run-panel__stats {
@@ -72,27 +77,38 @@
 
   .run-panel__button {
     justify-self: start;
+    min-height: 4rem;
+    min-width: 16rem;
     border: 0;
     border-radius: 999px;
-    padding: 11px 22px;
+    padding: 14px 32px;
     background: var(--accent-color);
     color: var(--on-accent-color);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
-    box-shadow: 0 2px 8px color-mix(in oklch, var(--accent-color) 40%, transparent);
+    transition: background 0.18s ease;
+    box-shadow:
+      0 10px 22px color-mix(in oklch, var(--accent-color) 40%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    @media (min-width: 768px) {
+      grid-column: 2/3;
+    }
   }
 
   .run-panel__button:hover:not(:disabled) {
     background: var(--accent-bg);
     box-shadow: 0 4px 16px color-mix(in oklch, var(--accent-color) 50%, transparent);
-    transform: translateY(-1px);
   }
 
   .run-panel__button:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px color-mix(in oklch, var(--accent-color) 35%, transparent);
+    transform: translateY(0) scale(0.995);
+    box-shadow:
+      0 8px 18px color-mix(in oklch, var(--accent-color) 42%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
   }
 
   .run-panel__button:disabled {
@@ -104,6 +120,10 @@
   .run-panel__progress {
     display: grid;
     gap: 8px;
+
+    @media (min-width: 768px) {
+      grid-column: 1/-1;
+    }
   }
 
   .run-panel__progress-header {

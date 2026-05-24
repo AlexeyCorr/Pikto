@@ -53,6 +53,7 @@
 
       <div class="workspace__section workspace__section--run">
         <p class="workspace__step">03 — {{ t.workspace.stepRun }}</p>
+
         <RunPanel
           :file-count="state.selectedFiles.value.length"
           :output-count="plannedOutputCount"

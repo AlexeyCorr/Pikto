@@ -6,12 +6,12 @@ function pluralEn(n: number, one: string, many: string): string {
 
 export const en: Translations = {
   hero: {
-    meta: 'tool = "image optimization" // v1.21',
-    lead: 'Prepare web-ready image assets in your browser with vector and raster.',
+    meta: 'tool = "media optimization" // v1.21',
+    lead: 'Right in your browser — with no uploads to a server.',
   },
   workspace: {
     eyebrow: 'Workspace',
-    title: 'Optimise',
+    title: 'Optimize files',
     modeChangeConfirm: 'Switching modes will clear the current file selection. Continue?',
     stepFiles: 'Files',
     stepSettings: 'Settings',
@@ -25,8 +25,8 @@ export const en: Translations = {
   },
   runPanel: {
     filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
-    outputsPlanned: (n) => `${n} ${pluralEn(n, 'output', 'outputs')} planned`,
-    outdatedWarning: 'Settings changed after the last run. Results are outdated.',
+    outputsPlanned: (n) => `${n} ${pluralEn(n, 'output', 'outputs')} ready`,
+    outdatedWarning: 'Settings changed after the last run. Run again to refresh these results.',
     compress: 'Reducio!',
     compressing: 'Reducio...',
   },
@@ -80,13 +80,13 @@ export const en: Translations = {
   },
   resultsPanel: {
     title: 'Results',
-    emptyHint: 'Review each optimized asset before downloading.',
+    emptyHint: 'Review each optimized file before downloading.',
     outputs: (n) => `${n} ${pluralEn(n, 'output', 'outputs')}`,
     files: (n) => `${n} ${pluralEn(n, 'file', 'files')}`,
     savedAvg: (p) => `${p}% saved avg`,
     largerAvg: (p) => `${p}% larger avg`,
     downloadAll: 'Download all',
-    empty: 'No processed assets yet. Run a batch to populate the results table, young Padawan.',
+    empty: 'No processed files yet. Run Reducio! to fill this list.',
     error: 'Error',
     processingFailed: 'Processing failed',
     download: 'Download',
