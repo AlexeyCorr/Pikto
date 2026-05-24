@@ -82,7 +82,7 @@
   import { t } from '@/app/i18n';
   import { usePiktoState } from '@/app/composables/usePiktoState';
   import { buildDownloadName, buildResultsArchive, triggerBlobDownload } from '@/app/utils/download';
-  import { filterAcceptedFiles } from '@/app/utils/files';
+  import { dedupeRasterFormats, dedupeVideoFormats, filterAcceptedFiles } from '@/app/utils/files';
   import type { BatchSummary, JobOutput, Mode } from '@/app/types';
   import type { WorkerRequest, WorkerResponse } from '@/app/worker/contracts';
   import MediaWorker from './app/worker/media.worker?worker';
@@ -106,10 +106,18 @@
     }
 
     if (state.mode.value === 'video') {
-      return state.selectedFiles.value.length * state.videoOutputFormats.value.length;
+      const videoFormats = [...state.videoOutputFormats.value];
+      return state.selectedFiles.value.reduce(
+        (sum, file) => sum + dedupeVideoFormats(toRaw(file), videoFormats).length,
+        0,
+      );
     }
 
-    return state.selectedFiles.value.length * state.outputFormats.value.length;
+    const rasterFormats = [...state.outputFormats.value];
+    return state.selectedFiles.value.reduce(
+      (sum, file) => sum + dedupeRasterFormats(toRaw(file), rasterFormats).length,
+      0,
+    );
   });
 
   const batchSummary = computed<BatchSummary | null>(() => {
@@ -248,13 +256,13 @@
             settings: { ...state.vectorSettings.value },
           })),
         }
-      : state.mode.value === 'video'
+        : state.mode.value === 'video'
         ? {
             type: 'process-video-batch',
             jobs: state.selectedFiles.value.map((file, index) => ({
               id: `video-${index}`,
               file: toRaw(file),
-              targetFormats: [...state.videoOutputFormats.value],
+              targetFormats: dedupeVideoFormats(toRaw(file), [...state.videoOutputFormats.value]),
               settings: { ...toRaw(state.videoSettings.value) },
             })),
           }
@@ -263,7 +271,7 @@
             jobs: state.selectedFiles.value.map((file, index) => ({
               id: `raster-${index}`,
               file: toRaw(file),
-              targetFormats: [...state.outputFormats.value],
+              targetFormats: dedupeRasterFormats(toRaw(file), [...state.outputFormats.value]),
               settings: { ...toRaw(state.rasterSettings.value) },
             })),
           };
@@ -334,12 +342,16 @@
   .workspace {
     display: grid;
     gap: var(--space-3);
-    padding: var(--space-4);
+    padding: var(--space-2) var(--space-1);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     background: var(--card-bg-color);
     box-shadow: var(--shadow-soft);
     transition: background-color 0.4s ease, border-color 0.4s ease;
+
+    @media (min-width: 768px) {
+	    padding: var(--space-4);
+    }
   }
 
   .workspace__header {

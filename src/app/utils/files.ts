@@ -1,6 +1,6 @@
 import { t } from '../i18n';
-import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from '../constants';
-import type { Mode, RejectedFile } from '../types';
+import { ACCEPTED_FILE_TYPES, FILE_EXTENSION_TO_FORMAT, MAX_FILE_SIZE } from '../constants';
+import type { Mode, RasterFormat, RasterOutputFormat, RejectedFile, VideoFormat, VideoOutputFormat } from '../types';
 
 export function filterAcceptedFiles(mode: Mode, files: File[]) {
   const accepted: File[] = [];
@@ -42,4 +42,38 @@ export function formatBytes(value: number) {
 
 export function getFileExtension(fileName: string) {
   return fileName.split('.').pop()?.toLowerCase() ?? '';
+}
+
+export function dedupeRasterFormats(file: File, formats: RasterOutputFormat[]): RasterOutputFormat[] {
+  const ext = getFileExtension(file.name);
+  const sourceFormat: RasterFormat = FILE_EXTENSION_TO_FORMAT[ext] ?? 'png';
+  const seen = new Set<string>();
+
+  return formats.filter((fmt) => {
+    const effective = fmt === 'original' ? sourceFormat : fmt;
+    if (seen.has(effective)) return false;
+    seen.add(effective);
+    return true;
+  });
+}
+
+export function dedupeVideoFormats(file: File, formats: VideoOutputFormat[]): VideoOutputFormat[] {
+  let sourceFormat: VideoFormat;
+
+  if (file.type === 'video/mp4')               sourceFormat = 'mp4';
+  else if (file.type === 'video/webm')          sourceFormat = 'webm';
+  else if (file.type === 'video/x-msvideo')     sourceFormat = 'avi';
+  else {
+    const ext = getFileExtension(file.name);
+    sourceFormat = ext === 'webm' ? 'webm' : ext === 'avi' ? 'avi' : 'mp4';
+  }
+
+  const seen = new Set<string>();
+
+  return formats.filter((fmt) => {
+    const effective = fmt === 'original' ? sourceFormat : fmt;
+    if (seen.has(effective)) return false;
+    seen.add(effective);
+    return true;
+  });
 }
