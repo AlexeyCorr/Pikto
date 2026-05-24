@@ -73,6 +73,11 @@ export function usePiktoState() {
     markResultsOutdated();
   }
 
+  function setPngEffort(value: number) {
+    rasterSettings.value.pngEffort = value;
+    markResultsOutdated();
+  }
+
   function setVectorPrecision(value: number) {
     vectorSettings.value.numberPrecision = value;
     markResultsOutdated();
@@ -211,6 +216,7 @@ export function usePiktoState() {
     toggleRasterFormat,
     setWebpMethod,
     setAvifEffort,
+    setPngEffort,
     setResizeWidth,
     setResizeHeight,
     setResizeLocked,

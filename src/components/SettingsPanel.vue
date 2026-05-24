@@ -59,6 +59,17 @@
             @update:model-value="emit('updateAvifEffort', $event)"
           />
 
+          <RangeControl
+            id="png-effort"
+            :label="t.settingsPanel.pngEffort"
+            :min="1"
+            :max="6"
+            :model-value="raster.pngEffort"
+            :display-value="`${raster.pngEffort} / 6`"
+            :hint="t.settingsPanel.pngHint"
+            @update:model-value="emit('updatePngEffort', $event)"
+          />
+
           <fieldset class="settings-panel__group settings-panel__formats">
             <legend class="settings-panel__legend">{{ t.settingsPanel.resize }}</legend>
             <ResizeControl
@@ -190,6 +201,7 @@
     toggleRasterFormat: [value: RasterFormat];
     updateWebpMethod: [value: number];
     updateAvifEffort: [value: number];
+    updatePngEffort: [value: number];
     updateResizeWidth: [value: number | null];
     updateResizeHeight: [value: number | null];
     updateResizeLocked: [value: boolean];

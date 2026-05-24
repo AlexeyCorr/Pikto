@@ -38,6 +38,7 @@
             @toggle-raster-format="state.toggleRasterFormat"
             @update-webp-method="state.setWebpMethod"
             @update-avif-effort="state.setAvifEffort"
+            @update-png-effort="state.setPngEffort"
             @update-resize-width="state.setResizeWidth"
             @update-resize-height="state.setResizeHeight"
             @update-resize-locked="state.setResizeLocked"

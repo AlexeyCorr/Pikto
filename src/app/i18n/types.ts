@@ -33,6 +33,8 @@ export interface Translations {
     webpHint: string;
     avifEffort: string;
     avifHint: string;
+    pngEffort: string;
+    pngHint: string;
     coordPrecision: string;
     precisionHint: string;
     options: string;

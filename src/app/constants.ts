@@ -47,10 +47,11 @@ export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
   selectedFormats: [],
   webpMethod: 4,
   avifEffort: 4,
+  pngEffort: 3,
   resize: { width: null, height: null, linked: true },
 };
 
-export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['webp', 'avif'];
+export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['jpg', 'png', 'webp', 'avif'];
 
 export const VIDEO_FORMAT_MIME_TYPES: Record<VideoFormat, string> = {
   mp4: 'video/mp4',

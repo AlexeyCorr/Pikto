@@ -30,7 +30,7 @@ export function mapRasterQuality(settings: RasterSettings) {
       speed: 10 - avifEffort,  // higher effort → lower speed → better quality
     },
     png: {
-      level: quality > 80 ? 4 : quality > 55 ? 3 : 2,
+      level: Math.min(6, Math.max(1, settings.pngEffort)),
     },
   };
 }

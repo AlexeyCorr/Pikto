@@ -33,4 +33,14 @@ describe('mapRasterQuality', () => {
 
     expect(highEffort.avif.speed).toBeLessThan(lowEffort.avif.speed);
   });
+
+  it('uses pngEffort directly as the oxipng level', () => {
+    const result = mapRasterQuality({ ...DEFAULT_RASTER_SETTINGS, pngEffort: 5 });
+    expect(result.png.level).toBe(5);
+  });
+
+  it('uses default pngEffort of 3', () => {
+    const result = mapRasterQuality(DEFAULT_RASTER_SETTINGS);
+    expect(result.png.level).toBe(3);
+  });
 });

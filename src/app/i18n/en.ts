@@ -39,6 +39,8 @@ export const en: Translations = {
     webpHint: 'Higher effort → smaller file, slower encoding',
     avifEffort: 'AVIF effort',
     avifHint: 'Higher effort → smaller file, slower encoding',
+    pngEffort: 'PNG effort',
+    pngHint: 'Higher effort → smaller file, slower encoding',
     coordPrecision: 'Coordinate precision',
     precisionHint: 'Decimal places in path coordinates — lower = smaller file, less precision',
     options: 'Options',

@@ -51,6 +51,7 @@ export interface RasterSettings {
   selectedFormats: RasterFormat[];
   webpMethod: number;
   avifEffort: number;
+  pngEffort: number;
   resize: RasterResizeSettings;
 }
 
