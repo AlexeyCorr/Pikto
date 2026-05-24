@@ -43,6 +43,8 @@
         <p class="upload-panel__choose-hint">{{ t.uploadPanel.orText }} <span class="upload-panel__choose-link">{{ t.uploadPanel.clickToChoose }}</span></p>
         <p class="upload-panel__format-hint">
           {{ mode === 'vector' ? t.uploadPanel.svgOnly : mode === 'video' ? t.uploadPanel.videoFormats : t.uploadPanel.rasterFormats }}
+          <span class="upload-panel__format-hint-sep">·</span>
+          {{ t.uploadPanel.maxSize(formatBytes(MAX_FILE_SIZE[mode])) }}
         </p>
       </template>
 
@@ -96,6 +98,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue';
   import { t } from '@/app/i18n';
+  import { MAX_FILE_SIZE } from '@/app/constants';
   import { formatBytes } from '@/app/utils/files';
   import type { Mode, RejectedFile } from '@/app/types';
 
@@ -262,6 +265,11 @@
     margin-top: 4px;
   }
 
+  .upload-panel__format-hint-sep {
+    margin-inline: 4px;
+    opacity: 0.4;
+  }
+
   .upload-panel__files {
     display: grid;
     gap: 2px;
@@ -271,7 +279,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
-    max-height: 240px;
+    max-height: 155px;
     overflow-y: auto;
   }
 

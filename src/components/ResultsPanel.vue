@@ -29,10 +29,10 @@
       {{ t.resultsPanel.empty }}
     </p>
 
-    <div v-for="(group, fileName) in grouped" :key="fileName" class="results-panel__group">
-      <p class="results-panel__filename">{{ fileName }}</p>
+    <div v-for="(group, key) in grouped" :key="key" class="results-panel__group">
+      <p class="results-panel__filename">{{ group.label }}</p>
       <div class="results-panel__rows">
-        <div v-for="item in group" :key="item.id" class="results-panel__row">
+        <div v-for="item in group.items" :key="item.id" class="results-panel__row">
           <span class="results-panel__format-badge">{{ item.targetFormat.toUpperCase() }}</span>
           <span class="results-panel__size-info">
             {{ formatBytes(item.originalBytes) }}
@@ -79,8 +79,9 @@
   }>();
 
   const grouped = computed(() => {
-    return props.results.reduce<Record<string, JobOutput[]>>((acc, item) => {
-      (acc[item.sourceFileName] ??= []).push(item);
+    return props.results.reduce<Record<string, { label: string; items: JobOutput[] }>>((acc, item) => {
+      const key = `${item.sourceIndex}::${item.sourceFileName}`;
+      (acc[key] ??= { label: item.sourceFileName, items: [] }).items.push(item);
       return acc;
     }, {});
   });

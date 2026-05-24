@@ -32,5 +32,5 @@ export function triggerBlobDownload(blob: Blob, fileName: string) {
   link.download = fileName;
   link.click();
 
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
 }

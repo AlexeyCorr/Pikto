@@ -70,6 +70,8 @@ export interface Translations {
     rejectVectorReason: string;
     rejectRasterReason: string;
     rejectVideoReason: string;
+    maxSize: (size: string) => string;
+    rejectTooLargeReason: (maxSize: string) => string;
     removeFile: string;
   };
   resultsPanel: {

@@ -73,7 +73,8 @@ function toExecError(error: unknown, recentLogs: string[]): Error {
   const logSuffix = recentLogs.length > 0
     ? ` | ffmpeg log: ${recentLogs.slice(-4).join(' | ')}`
     : '';
-  return new Error(`ffmpeg exec failed: ${msg}${logSuffix}`);
+  console.error(`[pikto] ffmpeg exec failed: ${msg}${logSuffix}`);
+  return new Error('Video encoding failed. The file may be corrupted or use an unsupported codec.');
 }
 
 export async function preloadFfmpeg() {
@@ -95,7 +96,10 @@ async function getFfmpeg(): Promise<FFmpeg> {
         wasmURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.wasm`, 'application/wasm'),
       });
       return ffmpeg;
-    })();
+    })().catch((err) => {
+      ffmpegPromise = null;
+      throw err;
+    });
   }
   return ffmpegPromise;
 }

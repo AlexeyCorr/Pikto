@@ -11,8 +11,8 @@ function pluralRu(n: number, one: string, few: string, many: string): string {
 
 export const ru: Translations = {
   hero: {
-    meta: 'инструмент = "оптимизация медиафайлов" // v1.21',
-    lead: 'Прямо в браузере — без загрузки на сервер.',
+    meta: 'инструмент = "оптимизация медиафайлов"',
+    lead: 'Прямо в браузере — без загрузки на сервер',
   },
   workspace: {
     eyebrow: 'Рабочее пространство',
@@ -81,6 +81,8 @@ export const ru: Translations = {
     rejectVectorReason: 'Векторный режим принимает только SVG-файлы.',
     rejectRasterReason: 'Растровый режим принимает JPG, PNG, WebP и AVIF.',
     rejectVideoReason: 'Режим видео принимает только MP4 и WEBM.',
+    maxSize: (size) => `до ${size}`,
+    rejectTooLargeReason: (maxSize) => `Файл слишком большой. Максимальный размер: ${maxSize}.`,
     removeFile: 'Убрать файл',
   },
   resultsPanel: {

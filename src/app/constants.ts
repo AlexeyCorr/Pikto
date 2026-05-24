@@ -8,6 +8,12 @@ import type {
   VideoSettings,
 } from './types';
 
+export const MAX_FILE_SIZE: Record<Mode, number> = {
+  raster: 50 * 1024 * 1024,
+  vector: 10 * 1024 * 1024,
+  video: 500 * 1024 * 1024,
+};
+
 export const ACCEPTED_FILE_TYPES: Record<Mode, string[]> = {
   vector: ['image/svg+xml'],
   raster: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],

@@ -6,8 +6,8 @@ function pluralEn(n: number, one: string, many: string): string {
 
 export const en: Translations = {
   hero: {
-    meta: 'tool = "media optimization" // v1.21',
-    lead: 'Right in your browser — with no uploads to a server.',
+    meta: 'tool = "media optimization"',
+    lead: 'Right in your browser — with no uploads to a server',
   },
   workspace: {
     eyebrow: 'Workspace',
@@ -76,6 +76,8 @@ export const en: Translations = {
     rejectVectorReason: 'Vector mode accepts only SVG files.',
     rejectRasterReason: 'Raster mode accepts JPG, PNG, WebP, and AVIF files.',
     rejectVideoReason: 'Video mode accepts MP4 and WEBM files.',
+    maxSize: (size) => `up to ${size}`,
+    rejectTooLargeReason: (maxSize) => `File is too large. Maximum allowed size is ${maxSize}.`,
     removeFile: 'Remove file',
   },
   resultsPanel: {

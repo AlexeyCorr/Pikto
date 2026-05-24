@@ -1,5 +1,5 @@
 import { t } from '../i18n';
-import { ACCEPTED_FILE_TYPES } from '../constants';
+import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from '../constants';
 import type { Mode, RejectedFile } from '../types';
 
 export function filterAcceptedFiles(mode: Mode, files: File[]) {
@@ -7,6 +7,14 @@ export function filterAcceptedFiles(mode: Mode, files: File[]) {
   const rejected: RejectedFile[] = [];
 
   for (const file of files) {
+    if (file.size > MAX_FILE_SIZE[mode]) {
+      rejected.push({
+        file,
+        reason: t.value.uploadPanel.rejectTooLargeReason(formatBytes(MAX_FILE_SIZE[mode])),
+      });
+      continue;
+    }
+
     if (ACCEPTED_FILE_TYPES[mode].includes(file.type)) {
       accepted.push(file);
       continue;

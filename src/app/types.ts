@@ -56,6 +56,7 @@ export interface RasterSettings {
 
 export interface JobOutput {
   id: string;
+  sourceIndex: number;
   sourceFileName: string;
   sourceFormat: string;
   targetFormat: OutputFormat;

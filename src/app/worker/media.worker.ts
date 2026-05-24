@@ -22,6 +22,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
         results.push({
           id: job.id,
+          sourceIndex: index,
           sourceFileName: job.file.name,
           sourceFormat: 'svg',
           targetFormat: 'svg',
@@ -46,7 +47,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
       const results: JobOutput[] = [];
       let completed = 0;
 
-      for (const job of event.data.jobs) {
+      for (const [jobIndex, job] of event.data.jobs.entries()) {
         for (const targetFormat of job.targetFormats) {
           const effectiveFormat = getRasterOutputFormat(job.file, targetFormat);
 
@@ -55,6 +56,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
             results.push({
               id: `${job.id}-${effectiveFormat}`,
+              sourceIndex: jobIndex,
               sourceFileName: job.file.name,
               sourceFormat: job.file.type.replace('image/', ''),
               targetFormat: effectiveFormat,
@@ -67,6 +69,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           } catch (error) {
             results.push({
               id: `${job.id}-${effectiveFormat}`,
+              sourceIndex: jobIndex,
               sourceFileName: job.file.name,
               sourceFormat: job.file.type.replace('image/', ''),
               targetFormat: effectiveFormat,
@@ -98,7 +101,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
       const results: JobOutput[] = [];
       let completed = 0;
 
-      for (const job of event.data.jobs) {
+      for (const [jobIndex, job] of event.data.jobs.entries()) {
         for (const targetFormat of job.targetFormats) {
           const effectiveFormat = getVideoOutputFormat(job.file, targetFormat);
           const baseCompleted = completed;
@@ -119,6 +122,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
             results.push({
               id: `${job.id}-${effectiveFormat}`,
+              sourceIndex: jobIndex,
               sourceFileName: job.file.name,
               sourceFormat: job.file.type.replace('video/', ''),
               targetFormat: effectiveFormat,
@@ -131,6 +135,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           } catch (error) {
             results.push({
               id: `${job.id}-${effectiveFormat}`,
+              sourceIndex: jobIndex,
               sourceFileName: job.file.name,
               sourceFormat: job.file.type.replace('video/', ''),
               targetFormat: effectiveFormat,

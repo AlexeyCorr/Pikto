@@ -120,7 +120,7 @@ describe('encodeVideoFile', () => {
     expect(ffmpegMock.off).toHaveBeenCalledWith('progress', expect.any(Function));
   });
 
-  it('includes recent ffmpeg logs in the error when encoding fails', async () => {
+  it('returns a user-friendly error message when encoding fails', async () => {
     ffmpegMock.exec.mockRejectedValue(new Error('something went wrong'));
     ffmpegMock.on.mockImplementation((event: string, handler: (payload: { message: string }) => void) => {
       if (event === 'log') {
@@ -129,7 +129,7 @@ describe('encodeVideoFile', () => {
     });
 
     await expect(encodeVideoFile(mp4File, 'original', 'balanced')).rejects.toThrow(
-      'ffmpeg exec failed: something went wrong | ffmpeg log: encoder init failed',
+      'Video encoding failed. The file may be corrupted or use an unsupported codec.',
     );
   });
 });

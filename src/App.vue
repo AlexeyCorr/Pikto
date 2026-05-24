@@ -97,6 +97,7 @@
   const workerProgress = ref<{ completed: number; total: number } | null>(null);
   const resultsPanelRef = ref<InstanceType<typeof ResultsPanel> | null>(null);
   let worker: Worker | null = null;
+  let selectRequestId = 0;
 
   const plannedOutputCount = computed(() => {
     if (state.mode.value === 'vector') {
@@ -164,6 +165,10 @@
   }
 
   function handleModeChange(nextMode: Mode) {
+    if (state.status.value === 'processing') {
+      return;
+    }
+
     if (
       nextMode !== state.mode.value &&
       state.selectedFiles.value.length > 0 &&
@@ -190,6 +195,8 @@
   }
 
   async function handleSelectFiles(files: File[]) {
+    const requestId = ++selectRequestId;
+
     const result = filterAcceptedFiles(state.mode.value, files);
     state.setSelectedFiles(result.accepted);
     state.setRejectedFiles(result.rejected);
@@ -200,11 +207,16 @@
     if (state.mode.value === 'raster' && result.accepted.length === 1) {
       try {
         const bitmap = await createImageBitmap(result.accepted[0]);
+        if (requestId !== selectRequestId) {
+          bitmap.close();
+          return;
+        }
         state.sourceImageSize.value = { width: bitmap.width, height: bitmap.height };
         state.rasterSettings.value.resize.width = bitmap.width;
         state.rasterSettings.value.resize.height = bitmap.height;
         bitmap.close();
       } catch {
+        if (requestId !== selectRequestId) return;
         state.sourceImageSize.value = null;
         state.rasterSettings.value.resize.width = null;
         state.rasterSettings.value.resize.height = null;
