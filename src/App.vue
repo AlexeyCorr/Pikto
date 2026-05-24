@@ -350,7 +350,7 @@
     transition: background-color 0.4s ease, border-color 0.4s ease;
 
     @media (min-width: 768px) {
-	    padding: var(--space-4);
+      padding: var(--space-4);
     }
   }
 

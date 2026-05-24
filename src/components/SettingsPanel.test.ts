@@ -18,6 +18,7 @@ describe('SettingsPanel', () => {
           selectedFormats: [],
           webpMethod: 4,
           avifEffort: 4,
+          pngEffort: 3,
           resize: { width: null, height: null, linked: true },
         },
         vector: {
