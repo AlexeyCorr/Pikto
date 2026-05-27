@@ -20,7 +20,7 @@ export default {
       if (pathname.startsWith(prefix)) {
         const remaining = pathname.slice(prefix.length);
         if (remaining === '' || remaining === '/') {
-          url.pathname = locale === 'ru' ? '/index.html' : `/${locale}/index.html`;
+          url.pathname = locale === 'ru' ? '/' : `/${locale}/`;
         } else {
           url.pathname = remaining;
         }
