@@ -1,5 +1,4 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import ffmpegWorkerUrl from '@ffmpeg/ffmpeg/worker?worker&url';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { VIDEO_FORMAT_MIME_TYPES } from '../constants';
 import { getFileExtension } from '../utils/files';
@@ -112,9 +111,9 @@ async function getFfmpeg(): Promise<FFmpeg> {
     ffmpegPromise = (async () => {
       const ffmpeg = new FFmpeg();
       await ffmpeg.load({
-        classWorkerURL: ffmpegWorkerUrl,
         coreURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.js`, 'text/javascript'),
         wasmURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.wasm`, 'application/wasm'),
+        classWorkerURL: await toBlobURL(`${FFMPEG_CDN}/ffmpeg-core.worker.js`, 'text/javascript'),
       });
       return ffmpeg;
     })().catch((err) => {
