@@ -18,7 +18,12 @@ export default {
     for (const locale of LOCALES) {
       const prefix = `/${locale}/pikto`;
       if (pathname.startsWith(prefix)) {
-        url.pathname = pathname.slice(prefix.length) || '/';
+        const remaining = pathname.slice(prefix.length);
+        if (remaining === '' || remaining === '/') {
+          url.pathname = locale === 'ru' ? '/index.html' : `/${locale}/index.html`;
+        } else {
+          url.pathname = remaining;
+        }
         return env.ASSETS.fetch(new Request(url.toString(), request));
       }
     }
