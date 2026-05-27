@@ -6,8 +6,8 @@
       :checked="modelValue"
       @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
     />
-    <span class="checkbox-option__content">
-      <span class="checkbox-option__name">{{ name }}</span>
+    <span v-if="name || hint" class="checkbox-option__content">
+      <span v-if="name" class="checkbox-option__name">{{ name }}</span>
       <span v-if="hint" class="checkbox-option__hint">{{ hint }}</span>
     </span>
   </label>

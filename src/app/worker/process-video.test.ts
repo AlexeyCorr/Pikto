@@ -32,6 +32,8 @@ import { encodeVideoFile, getVideoCommandArgs, getVideoOutputFormat } from './pr
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
 const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
 const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
+const movFile = new File(['mov'], 'clip.mov', { type: 'video/quicktime' });
+const mkvFile = new File(['mkv'], 'clip.mkv', { type: 'video/x-matroska' });
 
 beforeEach(() => {
   ffmpegMock.load.mockReset().mockImplementation(async () => undefined);
@@ -55,6 +57,14 @@ describe('getVideoOutputFormat', () => {
 
   it('detects avi source when target is original', () => {
     expect(getVideoOutputFormat(aviFile, 'original')).toBe('avi');
+  });
+
+  it('detects mov source when target is original', () => {
+    expect(getVideoOutputFormat(movFile, 'original')).toBe('mov');
+  });
+
+  it('detects mkv source when target is original', () => {
+    expect(getVideoOutputFormat(mkvFile, 'original')).toBe('mkv');
   });
 
   it('falls back to avi via extension when mime is generic', () => {
@@ -84,10 +94,11 @@ describe('getVideoCommandArgs', () => {
       '-c:v', 'libvpx',
       '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
       '-pix_fmt', 'yuv420p',
-      '-b:v', '600k',
+      '-crf', '35',
+      '-b:v', '100M',
       '-avoid_negative_ts', 'make_zero',
       '-deadline', 'good',
-      '-cpu-used', '5',
+      '-cpu-used', '3',
       '-threads', '1',
       '-c:a', 'libvorbis',
       '-b:a', '128k',
@@ -135,7 +146,7 @@ describe('encodeVideoFile', () => {
 
     const onProgress = vi.fn();
 
-    await encodeVideoFile(mp4File, 'original', 'balanced', onProgress);
+    await encodeVideoFile(mp4File, 'original', 'balanced', false, onProgress);
 
     expect(onProgress).toHaveBeenCalledWith(0.4);
     expect(ffmpegMock.off).toHaveBeenCalledWith('progress', expect.any(Function));

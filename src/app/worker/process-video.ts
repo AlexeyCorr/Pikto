@@ -10,7 +10,7 @@ let ffmpegPromise: Promise<FFmpeg> | null = null;
 const WEBM_VIDEO_FILTER = 'scale=trunc(iw/2)*2:trunc(ih/2)*2';
 
 const MP4_CRF: Record<VideoCompressionPreset, string> = { high: '21', balanced: '28', small: '34' };
-const WEBM_BITRATE: Record<VideoCompressionPreset, string> = { high: '4000k', balanced: '2000k', small: '600k' };
+const WEBM_CRF: Record<VideoCompressionPreset, string> = { high: '15', balanced: '25', small: '35' };
 
 const STRIP_METADATA_ARGS = ['-map_metadata', '-1', '-map_chapters', '-1', '-dn', '-sn'];
 const VIDEO_CODEC_ARGS = ['-vf', WEBM_VIDEO_FILTER, '-pix_fmt', 'yuv420p'];
@@ -20,10 +20,14 @@ function resolveSourceFormat(file: File): VideoFormat {
   if (file.type === 'video/webm') return 'webm';
   if (file.type === 'video/mp4')  return 'mp4';
   if (file.type === 'video/x-msvideo') return 'avi';
+  if (file.type === 'video/quicktime') return 'mov';
+  if (file.type === 'video/x-matroska') return 'mkv';
 
   const ext = getFileExtension(file.name);
   if (ext === 'webm') return 'webm';
   if (ext === 'avi')  return 'avi';
+  if (ext === 'mov')  return 'mov';
+  if (ext === 'mkv')  return 'mkv';
   return 'mp4';
 }
 
@@ -39,13 +43,16 @@ export function getVideoCommandArgs(
   outputName: string,
   targetFormat: VideoFormat,
   preset: VideoCompressionPreset,
+  removeAudio: boolean,
 ): string[] {
-  if (targetFormat === 'mp4') {
+  const audioArgs = removeAudio ? ['-an'] : ['-c:a', 'copy'];
+
+  if (targetFormat === 'mp4' || targetFormat === 'mov' || targetFormat === 'mkv') {
     return [
       '-c:v', 'libx264',
       '-preset', 'veryfast',
       '-crf', MP4_CRF[preset],
-      '-c:a', 'copy',
+      ...audioArgs,
       '-movflags', '+faststart',
       outputName,
     ];
@@ -53,28 +60,31 @@ export function getVideoCommandArgs(
 
   if (targetFormat === 'avi') {
     // AVI container does not support AAC — use mp3 audio instead
+    const aviAudioArgs = removeAudio ? ['-an'] : ['-c:a', 'libmp3lame', '-b:a', '128k'];
     return [
       '-c:v', 'libx264',
       '-preset', 'veryfast',
       '-crf', MP4_CRF[preset],
-      '-c:a', 'libmp3lame',
-      '-b:a', '128k',
+      ...aviAudioArgs,
       outputName,
     ];
   }
 
   // VP8 via libvpx: lower memory footprint than VP9, stable in single-thread WASM.
-  // CRF mode is not respected by libvpx in WASM; use explicit bitrate instead.
+  // To use CRF mode properly in libvpx (VP8), -b:v MUST be set to a high value.
+  // Setting it to 0 in VP8 falls back to 256kbps which ruins quality.
+  const webmAudioArgs = removeAudio ? ['-an'] : AUDIO_ARGS;
   return [
     ...STRIP_METADATA_ARGS,
     '-c:v', 'libvpx',
     ...VIDEO_CODEC_ARGS,
-    '-b:v', WEBM_BITRATE[preset],
+    '-crf', WEBM_CRF[preset],
+    '-b:v', '100M',
     '-avoid_negative_ts', 'make_zero',
     '-deadline', 'good',
-    '-cpu-used', '5',
+    '-cpu-used', '3',
     '-threads', '1',
-    ...AUDIO_ARGS,
+    ...webmAudioArgs,
     outputName,
   ];
 }
@@ -119,6 +129,7 @@ export async function encodeVideoFile(
   file: File,
   targetFormat: VideoOutputFormat,
   preset: VideoCompressionPreset,
+  removeAudio: boolean,
   onProgress?: (progress: number) => void,
 ): Promise<Blob> {
   const ffmpeg = await getFfmpeg();
@@ -153,7 +164,7 @@ export async function encodeVideoFile(
     const exitCode = await ffmpeg.exec([
       ...getVideoInputArgs(outputFormat),
       '-i', inputName,
-      ...getVideoCommandArgs(outputName, outputFormat, preset),
+      ...getVideoCommandArgs(outputName, outputFormat, preset, removeAudio),
     ]);
 
     if (exitCode !== 0) {

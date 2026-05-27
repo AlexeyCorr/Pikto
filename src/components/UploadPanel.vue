@@ -25,7 +25,7 @@
           mode === 'vector'
             ? '.svg,image/svg+xml'
             : mode === 'video'
-              ? '.mp4,.avi,video/mp4,video/x-msvideo'
+              ? '.mp4,.avi,.mov,.mkv,video/mp4,video/x-msvideo,video/quicktime,video/x-matroska'
               : '.jpg,.jpeg,.png,.webp,.avif'
         "
         @change="onChange"

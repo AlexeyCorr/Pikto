@@ -4,7 +4,7 @@ export type RasterFormat = 'jpg' | 'png' | 'webp' | 'avif';
 
 export type RasterOutputFormat = RasterFormat | 'original';
 
-export type VideoFormat = 'mp4' | 'webm' | 'avi';
+export type VideoFormat = 'mp4' | 'webm' | 'avi' | 'mov' | 'mkv';
 
 export type VideoOutputFormat = VideoFormat | 'original';
 
@@ -16,6 +16,7 @@ export interface VideoSettings {
   includeOriginal: boolean;
   selectedFormats: VideoFormat[];
   compressionPreset: VideoCompressionPreset;
+  removeAudio: boolean;
 }
 
 export type JobStatus = 'success' | 'error';

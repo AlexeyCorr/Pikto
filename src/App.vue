@@ -48,6 +48,7 @@
             @update-video-include-original="state.setVideoIncludeOriginal"
             @toggle-video-format="state.toggleVideoFormat"
             @update-video-preset="state.setVideoPreset"
+            @update-video-remove-audio="state.setVideoRemoveAudio"
           />
         </div>
       </div>

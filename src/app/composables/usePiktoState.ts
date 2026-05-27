@@ -112,6 +112,11 @@ export function usePiktoState() {
     markResultsOutdated();
   }
 
+  function setVideoRemoveAudio(value: boolean) {
+    videoSettings.value.removeAudio = value;
+    markResultsOutdated();
+  }
+
   function setResizeWidth(value: number | null) {
     rasterSettings.value.resize.width = value;
     if (
@@ -185,6 +190,8 @@ export function usePiktoState() {
 
   const videoOutputFormats = computed<VideoOutputFormat[]>(() => {
     const extra = videoSettings.value.selectedFormats;
+    // We don't filter out anything here, we just return the selected formats
+    // and 'original' if includeOriginal is true.
     return videoSettings.value.includeOriginal ? ['original', ...extra] : [...extra];
   });
 
@@ -226,6 +233,7 @@ export function usePiktoState() {
     setVideoPreset,
     setVideoIncludeOriginal,
     toggleVideoFormat,
+    setVideoRemoveAudio,
     setSelectedFiles,
     setRejectedFiles,
     removeFile,

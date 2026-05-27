@@ -63,9 +63,11 @@ export function dedupeVideoFormats(file: File, formats: VideoOutputFormat[]): Vi
   if (file.type === 'video/mp4')               sourceFormat = 'mp4';
   else if (file.type === 'video/webm')          sourceFormat = 'webm';
   else if (file.type === 'video/x-msvideo')     sourceFormat = 'avi';
+  else if (file.type === 'video/quicktime')     sourceFormat = 'mov';
+  else if (file.type === 'video/x-matroska')    sourceFormat = 'mkv';
   else {
     const ext = getFileExtension(file.name);
-    sourceFormat = ext === 'webm' ? 'webm' : ext === 'avi' ? 'avi' : 'mp4';
+    sourceFormat = ext === 'webm' ? 'webm' : ext === 'avi' ? 'avi' : ext === 'mov' ? 'mov' : ext === 'mkv' ? 'mkv' : 'mp4';
   }
 
   const seen = new Set<string>();

@@ -166,6 +166,17 @@
           </label>
         </div>
       </fieldset>
+
+      <details class="settings-panel__advanced">
+        <summary class="settings-panel__advanced-summary">{{ t.settingsPanel.advancedCodec }}</summary>
+        <div class="settings-panel__advanced-body">
+          <CheckboxOption
+            :model-value="video.removeAudio"
+            :name="t.settingsPanel.removeAudio"
+            @update:model-value="emit('updateVideoRemoveAudio', $event)"
+          />
+        </div>
+      </details>
     </template>
   </section>
 </template>
@@ -211,6 +222,7 @@
     updateVideoIncludeOriginal: [value: boolean];
     toggleVideoFormat: [value: VideoFormat];
     updateVideoPreset: [value: VideoCompressionPreset];
+    updateVideoRemoveAudio: [value: boolean];
   }>();
 </script>
 

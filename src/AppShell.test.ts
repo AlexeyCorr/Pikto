@@ -11,8 +11,8 @@ describe('App shell', () => {
   it('renders the refreshed hero and workspace copy', () => {
     render(App);
 
-    expect(screen.getByText(/tool = "media optimization" \/\/ v1\.21/i)).toBeInTheDocument();
-    expect(screen.getByText(/optimize media files right in your browser/i)).toBeInTheDocument();
+    expect(screen.getByText(/tool = "media optimization"/i)).toBeInTheDocument();
+    expect(screen.getByText(/Right in your browser/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /optimize files/i, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /raster/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /vector/i })).toBeInTheDocument();

@@ -8,6 +8,8 @@ const txtFile = new File(['hello'], 'notes.txt', { type: 'text/plain' });
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
 const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
 const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
+const movFile = new File(['mov'], 'clip.mov', { type: 'video/quicktime' });
+const mkvFile = new File(['mkv'], 'clip.mkv', { type: 'video/x-matroska' });
 const webpFile = new File(['webp'], 'photo.webp', { type: 'image/webp' });
 const jpgFile  = new File(['jpg'],  'photo.jpg',  { type: 'image/jpeg' });
 
@@ -93,5 +95,15 @@ describe('dedupeVideoFormats', () => {
   it('removes explicit avi when source is avi', () => {
     const result = dedupeVideoFormats(aviFile, ['original', 'avi'] as VideoOutputFormat[]);
     expect(result).toEqual(['original']);
+  });
+
+  it('keeps explicit mp4 when source is mov', () => {
+    const result = dedupeVideoFormats(movFile, ['original', 'mp4'] as VideoOutputFormat[]);
+    expect(result).toEqual(['original', 'mp4']);
+  });
+
+  it('keeps explicit mp4 when source is mkv', () => {
+    const result = dedupeVideoFormats(mkvFile, ['original', 'mp4'] as VideoOutputFormat[]);
+    expect(result).toEqual(['original', 'mp4']);
   });
 });

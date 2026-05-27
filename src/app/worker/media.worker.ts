@@ -110,6 +110,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
               job.file,
               targetFormat,
               job.settings.compressionPreset,
+              job.settings.removeAudio,
               (progress) => {
                 ctx.postMessage({
                   type: 'progress',
@@ -121,10 +122,10 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
             );
 
             results.push({
-              id: `${job.id}-${effectiveFormat}`,
+              id: `${job.id}-${targetFormat}`,
               sourceIndex: jobIndex,
               sourceFileName: job.file.name,
-              sourceFormat: job.file.type.replace('video/', ''),
+              sourceFormat: job.file.name.split('.').pop()?.toLowerCase() || 'unknown',
               targetFormat: effectiveFormat,
               originalBytes: job.file.size,
               outputBytes: blob.size,
@@ -134,10 +135,10 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
             });
           } catch (error) {
             results.push({
-              id: `${job.id}-${effectiveFormat}`,
+              id: `${job.id}-${targetFormat}`,
               sourceIndex: jobIndex,
               sourceFileName: job.file.name,
-              sourceFormat: job.file.type.replace('video/', ''),
+              sourceFormat: job.file.name.split('.').pop()?.toLowerCase() || 'unknown',
               targetFormat: effectiveFormat,
               originalBytes: job.file.size,
               outputBytes: 0,
