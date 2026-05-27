@@ -1,5 +1,5 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import ffmpegWorkerUrl from '@ffmpeg/ffmpeg/worker?url';
+import ffmpegWorkerUrl from '@ffmpeg/ffmpeg/worker?worker&url';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { VIDEO_FORMAT_MIME_TYPES } from '../constants';
 import { getFileExtension } from '../utils/files';
