@@ -123,7 +123,6 @@ describe('encodeVideoFile', () => {
     await encodeVideoFile(mp4File, 'original', 'balanced');
 
     expect(ffmpegMock.load).toHaveBeenCalledWith({
-      classWorkerURL: expect.stringMatching(/worker.*\.js/),
       coreURL: expect.stringMatching(/ffmpeg-core.*\.js/),
       wasmURL: expect.stringMatching(/ffmpeg-core.*\.wasm/),
     });
