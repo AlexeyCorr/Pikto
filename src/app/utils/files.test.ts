@@ -8,8 +8,10 @@ const txtFile = new File(['hello'], 'notes.txt', { type: 'text/plain' });
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
 const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
 const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
+const mpgFile = new File(['mpg'], 'clip.mpg', { type: 'video/mpeg' });
 const movFile = new File(['mov'], 'clip.mov', { type: 'video/quicktime' });
 const mkvFile = new File(['mkv'], 'clip.mkv', { type: 'video/x-matroska' });
+const gifFile = new File(['gif'], 'clip.gif', { type: 'image/gif' });
 const webpFile = new File(['webp'], 'photo.webp', { type: 'image/webp' });
 const jpgFile  = new File(['jpg'],  'photo.jpg',  { type: 'image/jpeg' });
 
@@ -28,10 +30,10 @@ describe('filterAcceptedFiles', () => {
     expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'notes.txt']);
   });
 
-  it('accepts mp4 and avi files in video mode', () => {
-    const result = filterAcceptedFiles('video', [svgFile, mp4File, webmFile, aviFile, txtFile]);
+  it('accepts supported video inputs in video mode', () => {
+    const result = filterAcceptedFiles('video', [svgFile, mp4File, webmFile, aviFile, mpgFile, gifFile, txtFile]);
 
-    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.avi']);
+    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.avi', 'clip.mpg', 'clip.gif']);
     expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'clip.webm', 'notes.txt']);
   });
 });
@@ -105,5 +107,15 @@ describe('dedupeVideoFormats', () => {
   it('keeps explicit mp4 when source is mkv', () => {
     const result = dedupeVideoFormats(mkvFile, ['original', 'mp4'] as VideoOutputFormat[]);
     expect(result).toEqual(['original', 'mp4']);
+  });
+
+  it('drops original for gif input but keeps explicit video targets', () => {
+    const result = dedupeVideoFormats(gifFile, ['original', 'mp4', 'avi'] as VideoOutputFormat[]);
+    expect(result).toEqual(['mp4', 'avi']);
+  });
+
+  it('drops original for mpg input but keeps explicit video targets', () => {
+    const result = dedupeVideoFormats(mpgFile, ['original', 'mp4'] as VideoOutputFormat[]);
+    expect(result).toEqual(['mp4']);
   });
 });

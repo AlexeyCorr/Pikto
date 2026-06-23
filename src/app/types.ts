@@ -1,16 +1,20 @@
+import { FORMATS, RASTER_FORMATS, VIDEO_ACCEPTED_INPUT_FORMATS, VIDEO_OUTPUT_FORMATS } from './formats';
+
 export type Mode = 'raster' | 'vector' | 'video';
 
-export type RasterFormat = 'jpg' | 'png' | 'webp' | 'avif';
+export type RasterFormat = typeof RASTER_FORMATS[number];
 
 export type RasterOutputFormat = RasterFormat | 'original';
 
-export type VideoFormat = 'mp4' | 'webm' | 'avi' | 'mov' | 'mkv';
+export type VideoFormat = typeof VIDEO_OUTPUT_FORMATS[number];
+
+export type VideoInputFormat = typeof VIDEO_ACCEPTED_INPUT_FORMATS[number] | typeof FORMATS.WEBM;
 
 export type VideoOutputFormat = VideoFormat | 'original';
 
 export type VideoCompressionPreset = 'high' | 'balanced' | 'small';
 
-export type OutputFormat = RasterOutputFormat | VideoOutputFormat | 'svg';
+export type OutputFormat = RasterOutputFormat | VideoInputFormat | VideoOutputFormat | typeof FORMATS.SVG;
 
 export interface VideoSettings {
   includeOriginal: boolean;

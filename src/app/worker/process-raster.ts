@@ -3,8 +3,8 @@ import { encode as encodeJpeg } from '@jsquash/jpeg';
 import { optimise as optimisePng } from '@jsquash/oxipng';
 import { encode as encodeWebp } from '@jsquash/webp';
 import resize from '@jsquash/resize';
-import { FILE_EXTENSION_TO_FORMAT, RASTER_FORMAT_MIME_TYPES } from '../constants';
-import { getFileExtension } from '../utils/files';
+import { FORMATS, RASTER_FORMAT_MIME_TYPES } from '../constants';
+import { resolveRasterSourceFormat } from '../utils/files';
 import { mapRasterQuality } from '../utils/raster-options';
 import type { RasterFormat, RasterOutputFormat, RasterSettings } from '../types';
 
@@ -29,8 +29,7 @@ function resolveTargetFormat(file: File, targetFormat: RasterOutputFormat): Rast
     return targetFormat;
   }
 
-  const extension = getFileExtension(file.name);
-  return FILE_EXTENSION_TO_FORMAT[extension] ?? 'png';
+  return resolveRasterSourceFormat(file);
 }
 
 export async function encodeRasterFile(
@@ -54,26 +53,26 @@ export async function encodeRasterFile(
   const options = mapRasterQuality(settings);
 
   switch (effectiveFormat) {
-    case 'jpg':
+    case FORMATS.JPG:
       return new Blob([await encodeJpeg(imageData, options.jpeg)], {
-        type: RASTER_FORMAT_MIME_TYPES.jpg,
+        type: RASTER_FORMAT_MIME_TYPES[FORMATS.JPG],
       });
-    case 'webp':
+    case FORMATS.WEBP:
       return new Blob([await encodeWebp(imageData, options.webp)], {
-        type: RASTER_FORMAT_MIME_TYPES.webp,
+        type: RASTER_FORMAT_MIME_TYPES[FORMATS.WEBP],
       });
-    case 'avif':
+    case FORMATS.AVIF:
       return new Blob([await encodeAvif(imageData, options.avif)], {
-        type: RASTER_FORMAT_MIME_TYPES.avif,
+        type: RASTER_FORMAT_MIME_TYPES[FORMATS.AVIF],
       });
-    case 'png': {
+    case FORMATS.PNG: {
       const pngCanvas = new OffscreenCanvas(imageData.width, imageData.height);
       const pngCtx = pngCanvas.getContext('2d');
       if (!pngCtx) throw new Error('2D canvas context is unavailable.');
       pngCtx.putImageData(imageData, 0, 0);
-      const pngBlob = await pngCanvas.convertToBlob({ type: 'image/png' });
+      const pngBlob = await pngCanvas.convertToBlob({ type: RASTER_FORMAT_MIME_TYPES[FORMATS.PNG] });
       return new Blob([await optimisePng(await pngBlob.arrayBuffer(), options.png)], {
-        type: RASTER_FORMAT_MIME_TYPES.png,
+        type: RASTER_FORMAT_MIME_TYPES[FORMATS.PNG],
       });
     }
     default:

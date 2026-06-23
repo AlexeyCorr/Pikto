@@ -21,13 +21,7 @@
         class="upload-panel__input"
         type="file"
         multiple
-        :accept="
-          mode === 'vector'
-            ? '.svg,image/svg+xml'
-            : mode === 'video'
-              ? '.mp4,.avi,.mov,.mkv,video/mp4,video/x-msvideo,video/quicktime,video/x-matroska'
-              : '.jpg,.jpeg,.png,.webp,.avif'
-        "
+        :accept="ACCEPT_ATTRIBUTE_BY_MODE[mode]"
         @change="onChange"
       />
 
@@ -98,7 +92,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue';
   import { t } from '@/app/i18n';
-  import { MAX_FILE_SIZE } from '@/app/constants';
+  import { ACCEPT_ATTRIBUTE_BY_MODE, MAX_FILE_SIZE } from '@/app/constants';
   import { formatBytes } from '@/app/utils/files';
   import type { Mode, RejectedFile } from '@/app/types';
 

@@ -1,3 +1,19 @@
+export {
+  ACCEPT_ATTRIBUTE_BY_MODE,
+  ACCEPTED_FILE_TYPES,
+  FILE_EXTENSION_TO_FORMAT,
+  FORMATS,
+  RASTER_FORMATS,
+  RASTER_FORMAT_MIME_TYPES,
+  RASTER_MIME_TYPE_TO_FORMAT,
+  VECTOR_MIME_TYPES,
+  VIDEO_ACCEPTED_INPUT_FORMATS,
+  VIDEO_EXTENSION_TO_FORMAT,
+  VIDEO_FORMAT_MIME_TYPES,
+  VIDEO_MIME_TYPE_TO_FORMAT,
+  VIDEO_OUTPUT_FORMATS,
+} from './formats';
+
 import type {
   Mode,
   RasterFormat,
@@ -7,32 +23,12 @@ import type {
   VideoFormat,
   VideoSettings,
 } from './types';
+import { FORMATS, RASTER_FORMATS, VIDEO_OUTPUT_FORMATS } from './formats';
 
 export const MAX_FILE_SIZE: Record<Mode, number> = {
   raster: 50 * 1024 * 1024,
   vector: 10 * 1024 * 1024,
   video: 500 * 1024 * 1024,
-};
-
-export const ACCEPTED_FILE_TYPES: Record<Mode, string[]> = {
-  vector: ['image/svg+xml'],
-  raster: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
-  video: ['video/mp4', 'video/x-msvideo', 'video/quicktime', 'video/x-matroska'],
-};
-
-export const FILE_EXTENSION_TO_FORMAT: Record<string, RasterFormat> = {
-  jpg: 'jpg',
-  jpeg: 'jpg',
-  png: 'png',
-  webp: 'webp',
-  avif: 'avif',
-};
-
-export const RASTER_FORMAT_MIME_TYPES: Record<RasterFormat, string> = {
-  jpg: 'image/jpeg',
-  png: 'image/png',
-  webp: 'image/webp',
-  avif: 'image/avif',
 };
 
 export const DEFAULT_VECTOR_SETTINGS: VectorSettings = {
@@ -51,19 +47,11 @@ export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
   resize: { width: null, height: null, linked: true },
 };
 
-export const RASTER_EXTRA_FORMATS: RasterFormat[] = ['jpg', 'png', 'webp', 'avif'];
+export const RASTER_EXTRA_FORMATS: RasterFormat[] = [...RASTER_FORMATS];
 
-export const VIDEO_FORMAT_MIME_TYPES: Record<VideoFormat, string> = {
-  mp4: 'video/mp4',
-  webm: 'video/webm',
-  avi: 'video/x-msvideo',
-  mov: 'video/quicktime',
-  mkv: 'video/x-matroska',
-};
+export const VIDEO_EXTRA_FORMATS: VideoFormat[] = VIDEO_OUTPUT_FORMATS.filter((format) => format !== FORMATS.WEBM);
 
-export const VIDEO_EXTRA_FORMATS: VideoFormat[] = ['mp4', 'avi', 'mov', 'mkv'];
-
-export const VIDEO_COMING_SOON_FORMATS: VideoFormat[] = ['webm'];
+export const VIDEO_COMING_SOON_FORMATS: VideoFormat[] = [FORMATS.WEBM];
 
 export const VIDEO_COMPRESSION_PRESETS: VideoCompressionPreset[] = ['high', 'balanced', 'small'];
 

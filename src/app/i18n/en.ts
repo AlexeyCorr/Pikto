@@ -1,8 +1,12 @@
+import { RASTER_FORMATS, VIDEO_ACCEPTED_INPUT_FORMATS } from '../constants';
 import type { Translations } from './types';
 
 function pluralEn(n: number, one: string, many: string): string {
   return n === 1 ? one : many;
 }
+
+const rasterFormatsList = RASTER_FORMATS.map((format) => format.toUpperCase()).join(', ');
+const videoFormatsList = VIDEO_ACCEPTED_INPUT_FORMATS.map((format) => format.toUpperCase()).join(', ');
 
 export const en: Translations = {
   hero: {
@@ -69,16 +73,16 @@ export const en: Translations = {
     clickToChoose: 'click to choose',
     addMore: 'Add more',
     svgOnly: 'SVG only',
-    rasterFormats: 'JPG, PNG, WebP, AVIF',
-    videoFormats: 'MP4, AVI, MOV, MKV',
+    rasterFormats: rasterFormatsList,
+    videoFormats: videoFormatsList,
     dropToAdd: 'Drop to add',
     filesSelected: (n) => `${n} ${pluralEn(n, 'file', 'files')}`,
     changeSelection: 'Change selection',
     filesSelectedSummary: (n) => `${n} ${pluralEn(n, 'file', 'files')} selected`,
     filesRejectedSummary: (n) => `${n} ${pluralEn(n, 'file', 'files')} rejected`,
     rejectVectorReason: 'Vector mode accepts only SVG files.',
-    rejectRasterReason: 'Raster mode accepts JPG, PNG, WebP, and AVIF files.',
-    rejectVideoReason: 'Video mode accepts MP4, AVI, MOV, and MKV files.',
+    rejectRasterReason: `Raster mode accepts ${rasterFormatsList} files.`,
+    rejectVideoReason: `Video mode accepts ${videoFormatsList} files.`,
     maxSize: (size) => `up to ${size}`,
     rejectTooLargeReason: (maxSize) => `File is too large. Maximum allowed size is ${maxSize}.`,
     removeFile: 'Remove file',

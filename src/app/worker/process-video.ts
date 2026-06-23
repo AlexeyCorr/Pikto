@@ -1,8 +1,8 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-import { VIDEO_FORMAT_MIME_TYPES } from '../constants';
-import { getFileExtension } from '../utils/files';
-import type { VideoCompressionPreset, VideoFormat, VideoOutputFormat } from '../types';
+import { FORMATS, VIDEO_FORMAT_MIME_TYPES } from '../constants';
+import { resolveVideoInputFormat } from '../utils/files';
+import type { VideoCompressionPreset, VideoFormat, VideoInputFormat, VideoOutputFormat } from '../types';
 
 let ffmpegPromise: Promise<FFmpeg> | null = null;
 
@@ -15,27 +15,21 @@ const STRIP_METADATA_ARGS = ['-map_metadata', '-1', '-map_chapters', '-1', '-dn'
 const VIDEO_CODEC_ARGS = ['-vf', WEBM_VIDEO_FILTER, '-pix_fmt', 'yuv420p'];
 const AUDIO_ARGS = ['-c:a', 'libvorbis', '-b:a', '128k'];
 
-function resolveSourceFormat(file: File): VideoFormat {
-  if (file.type === 'video/webm') return 'webm';
-  if (file.type === 'video/mp4')  return 'mp4';
-  if (file.type === 'video/x-msvideo') return 'avi';
-  if (file.type === 'video/quicktime') return 'mov';
-  if (file.type === 'video/x-matroska') return 'mkv';
+function resolveInputFormat(file: File): VideoInputFormat {
+  return resolveVideoInputFormat(file);
+}
 
-  const ext = getFileExtension(file.name);
-  if (ext === 'webm') return 'webm';
-  if (ext === 'avi')  return 'avi';
-  if (ext === 'mov')  return 'mov';
-  if (ext === 'mkv')  return 'mkv';
-  return 'mp4';
+function resolveOriginalOutputFormat(file: File): VideoFormat {
+  const sourceFormat = resolveInputFormat(file);
+  return sourceFormat === FORMATS.GIF || sourceFormat === FORMATS.MPG ? FORMATS.MP4 : sourceFormat;
 }
 
 export function getVideoOutputFormat(file: File, targetFormat: VideoOutputFormat): VideoFormat {
-  return targetFormat === 'original' ? resolveSourceFormat(file) : targetFormat;
+  return targetFormat === 'original' ? resolveOriginalOutputFormat(file) : targetFormat;
 }
 
 function getVideoInputArgs(targetFormat: VideoFormat): string[] {
-  return targetFormat === 'webm' ? ['-fflags', '+genpts'] : [];
+  return targetFormat === FORMATS.WEBM ? ['-fflags', '+genpts'] : [];
 }
 
 export function getVideoCommandArgs(
@@ -46,10 +40,11 @@ export function getVideoCommandArgs(
 ): string[] {
   const audioArgs = removeAudio ? ['-an'] : ['-c:a', 'copy'];
 
-  if (targetFormat === 'mp4' || targetFormat === 'mov' || targetFormat === 'mkv') {
+  if (targetFormat === FORMATS.MP4 || targetFormat === FORMATS.MOV || targetFormat === FORMATS.MKV) {
     return [
       '-c:v', 'libx264',
       '-preset', 'veryfast',
+      ...VIDEO_CODEC_ARGS,
       '-crf', MP4_CRF[preset],
       ...audioArgs,
       '-movflags', '+faststart',
@@ -57,12 +52,13 @@ export function getVideoCommandArgs(
     ];
   }
 
-  if (targetFormat === 'avi') {
+  if (targetFormat === FORMATS.AVI) {
     // AVI container does not support AAC — use mp3 audio instead
     const aviAudioArgs = removeAudio ? ['-an'] : ['-c:a', 'libmp3lame', '-b:a', '128k'];
     return [
       '-c:v', 'libx264',
       '-preset', 'veryfast',
+      ...VIDEO_CODEC_ARGS,
       '-crf', MP4_CRF[preset],
       ...aviAudioArgs,
       outputName,
@@ -131,7 +127,7 @@ export async function encodeVideoFile(
   onProgress?: (progress: number) => void,
 ): Promise<Blob> {
   const ffmpeg = await getFfmpeg();
-  const sourceFormat = resolveSourceFormat(file);
+  const sourceFormat = resolveInputFormat(file);
   const outputFormat = getVideoOutputFormat(file, targetFormat);
   const inputName = `input.${sourceFormat}`;
   const outputName = `output.${outputFormat}`;
@@ -140,7 +136,7 @@ export async function encodeVideoFile(
   let maxProgress = 0;
   const progressHandler = onProgress
     ? ({ progress }: { progress: number }) => {
-        const clamped = Math.min(0.95, Math.max(0, progress));
+        const clamped = Math.min(0.99, Math.max(0, progress));
         if (clamped > maxProgress) {
           maxProgress = clamped;
           onProgress(clamped);

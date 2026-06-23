@@ -1,6 +1,13 @@
 import { t } from '../i18n';
-import { ACCEPTED_FILE_TYPES, FILE_EXTENSION_TO_FORMAT, MAX_FILE_SIZE } from '../constants';
-import type { Mode, RasterFormat, RasterOutputFormat, RejectedFile, VideoFormat, VideoOutputFormat } from '../types';
+import {
+  ACCEPTED_FILE_TYPES,
+  FILE_EXTENSION_TO_FORMAT,
+  FORMATS,
+  MAX_FILE_SIZE,
+  VIDEO_EXTENSION_TO_FORMAT,
+  VIDEO_MIME_TYPE_TO_FORMAT,
+} from '../constants';
+import type { Mode, RasterFormat, RasterOutputFormat, RejectedFile, VideoInputFormat, VideoOutputFormat } from '../types';
 
 export function filterAcceptedFiles(mode: Mode, files: File[]) {
   const accepted: File[] = [];
@@ -44,38 +51,36 @@ export function getFileExtension(fileName: string) {
   return fileName.split('.').pop()?.toLowerCase() ?? '';
 }
 
-export function dedupeRasterFormats(file: File, formats: RasterOutputFormat[]): RasterOutputFormat[] {
-  const ext = getFileExtension(file.name);
-  const sourceFormat: RasterFormat = FILE_EXTENSION_TO_FORMAT[ext] ?? 'png';
+export function resolveRasterSourceFormat(file: Pick<File, 'name'>): RasterFormat {
+  return FILE_EXTENSION_TO_FORMAT[getFileExtension(file.name)] ?? FORMATS.PNG;
+}
+
+export function resolveVideoInputFormat(file: Pick<File, 'name' | 'type'>): VideoInputFormat {
+  return VIDEO_MIME_TYPE_TO_FORMAT[file.type] ?? VIDEO_EXTENSION_TO_FORMAT[getFileExtension(file.name)] ?? FORMATS.MP4;
+}
+
+function dedupeOutputFormats<T extends string>(formats: T[], getEffectiveFormat: (format: T) => string) {
   const seen = new Set<string>();
 
-  return formats.filter((fmt) => {
-    const effective = fmt === 'original' ? sourceFormat : fmt;
-    if (seen.has(effective)) return false;
-    seen.add(effective);
+  return formats.filter((format) => {
+    const effectiveFormat = getEffectiveFormat(format);
+    if (seen.has(effectiveFormat)) return false;
+    seen.add(effectiveFormat);
     return true;
   });
 }
 
-export function dedupeVideoFormats(file: File, formats: VideoOutputFormat[]): VideoOutputFormat[] {
-  let sourceFormat: VideoFormat;
+export function dedupeRasterFormats(file: File, formats: RasterOutputFormat[]): RasterOutputFormat[] {
+  const sourceFormat = resolveRasterSourceFormat(file);
+  return dedupeOutputFormats(formats, (format) => (format === 'original' ? sourceFormat : format));
+}
 
-  if (file.type === 'video/mp4')               sourceFormat = 'mp4';
-  else if (file.type === 'video/webm')          sourceFormat = 'webm';
-  else if (file.type === 'video/x-msvideo')     sourceFormat = 'avi';
-  else if (file.type === 'video/quicktime')     sourceFormat = 'mov';
-  else if (file.type === 'video/x-matroska')    sourceFormat = 'mkv';
-  else {
-    const ext = getFileExtension(file.name);
-    sourceFormat = ext === 'webm' ? 'webm' : ext === 'avi' ? 'avi' : ext === 'mov' ? 'mov' : ext === 'mkv' ? 'mkv' : 'mp4';
+export function dedupeVideoFormats(file: File, formats: VideoOutputFormat[]): VideoOutputFormat[] {
+  const sourceFormat = resolveVideoInputFormat(file);
+
+  if (sourceFormat === FORMATS.GIF || sourceFormat === FORMATS.MPG) {
+    return formats.filter((fmt) => fmt !== 'original');
   }
 
-  const seen = new Set<string>();
-
-  return formats.filter((fmt) => {
-    const effective = fmt === 'original' ? sourceFormat : fmt;
-    if (seen.has(effective)) return false;
-    seen.add(effective);
-    return true;
-  });
+  return dedupeOutputFormats(formats, (format) => (format === 'original' ? sourceFormat : format));
 }

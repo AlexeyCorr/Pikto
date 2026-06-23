@@ -30,10 +30,11 @@ vi.mock('@ffmpeg/util', () => ({
 import { encodeVideoFile, getVideoCommandArgs, getVideoOutputFormat } from './process-video';
 
 const mp4File = new File(['mp4'], 'clip.mp4', { type: 'video/mp4' });
-const webmFile = new File(['webm'], 'clip.webm', { type: 'video/webm' });
 const aviFile = new File(['avi'], 'clip.avi', { type: 'video/x-msvideo' });
+const mpgFile = new File(['mpg'], 'clip.mpg', { type: 'video/mpeg' });
 const movFile = new File(['mov'], 'clip.mov', { type: 'video/quicktime' });
 const mkvFile = new File(['mkv'], 'clip.mkv', { type: 'video/x-matroska' });
+const gifFile = new File(['gif'], 'clip.gif', { type: 'image/gif' });
 
 beforeEach(() => {
   ffmpegMock.load.mockReset().mockImplementation(async () => undefined);
@@ -48,7 +49,6 @@ beforeEach(() => {
 describe('getVideoOutputFormat', () => {
   it('keeps the source container when target format is original', () => {
     expect(getVideoOutputFormat(mp4File, 'original')).toBe('mp4');
-    expect(getVideoOutputFormat(webmFile, 'original')).toBe('webm');
   });
 
   it('returns the explicit target format when requested', () => {
@@ -78,6 +78,8 @@ describe('getVideoCommandArgs', () => {
     expect(getVideoCommandArgs('output.mp4', 'mp4', 'balanced')).toEqual([
       '-c:v', 'libx264',
       '-preset', 'veryfast',
+      '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+      '-pix_fmt', 'yuv420p',
       '-crf', '28',
       '-c:a', 'copy',
       '-movflags', '+faststart',
@@ -110,6 +112,8 @@ describe('getVideoCommandArgs', () => {
     expect(getVideoCommandArgs('output.avi', 'avi', 'balanced')).toEqual([
       '-c:v', 'libx264',
       '-preset', 'veryfast',
+      '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+      '-pix_fmt', 'yuv420p',
       '-crf', '28',
       '-c:a', 'libmp3lame',
       '-b:a', '128k',
@@ -149,6 +153,37 @@ describe('encodeVideoFile', () => {
 
     expect(onProgress).toHaveBeenCalledWith(0.4);
     expect(ffmpegMock.off).toHaveBeenCalledWith('progress', expect.any(Function));
+  });
+
+  it('keeps progress near-complete instead of snapping down to 95%', async () => {
+    ffmpegMock.exec.mockImplementationOnce(async () => {
+      const progressHandler = ffmpegMock.on.mock.calls[0]?.[1] as
+        | ((event: { progress: number }) => void)
+        | undefined;
+
+      progressHandler?.({ progress: 1 });
+      return 0;
+    });
+
+    const onProgress = vi.fn();
+
+    await encodeVideoFile(mp4File, 'original', 'balanced', false, onProgress);
+
+    expect(onProgress).toHaveBeenCalledWith(0.99);
+  });
+
+  it('uses the gif extension for ffmpeg input files', async () => {
+    await encodeVideoFile(gifFile, 'mp4', 'balanced');
+
+    expect(ffmpegMock.writeFile).toHaveBeenCalledWith('input.gif', expect.any(Uint8Array));
+    expect(ffmpegMock.exec).toHaveBeenCalledWith(expect.arrayContaining(['-i', 'input.gif', 'output.mp4']));
+  });
+
+  it('uses the mpg extension for ffmpeg input files', async () => {
+    await encodeVideoFile(mpgFile, 'avi', 'balanced');
+
+    expect(ffmpegMock.writeFile).toHaveBeenCalledWith('input.mpg', expect.any(Uint8Array));
+    expect(ffmpegMock.exec).toHaveBeenCalledWith(expect.arrayContaining(['-i', 'input.mpg', 'output.avi']));
   });
 
   it('returns a user-friendly error message when encoding fails', async () => {

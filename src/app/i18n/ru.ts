@@ -1,3 +1,4 @@
+import { RASTER_FORMATS, VIDEO_ACCEPTED_INPUT_FORMATS } from '../constants';
 import type { Translations } from './types';
 
 function pluralRu(n: number, one: string, few: string, many: string): string {
@@ -8,6 +9,9 @@ function pluralRu(n: number, one: string, few: string, many: string): string {
   if (rem >= 2 && rem <= 4) return few;
   return many;
 }
+
+const rasterFormatsList = RASTER_FORMATS.map((format) => format.toUpperCase()).join(', ');
+const videoFormatsList = VIDEO_ACCEPTED_INPUT_FORMATS.map((format) => format.toUpperCase()).join(', ');
 
 export const ru: Translations = {
   hero: {
@@ -74,16 +78,16 @@ export const ru: Translations = {
     clickToChoose: 'выберите вручную',
     addMore: 'Добавить ещё',
     svgOnly: 'Только SVG',
-    rasterFormats: 'JPG, PNG, WebP, AVIF',
-    videoFormats: 'MP4, AVI, MOV, MKV',
+    rasterFormats: rasterFormatsList,
+    videoFormats: videoFormatsList,
     dropToAdd: 'Отпустите для добавления',
     filesSelected: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')}`,
     changeSelection: 'Изменить выбор',
     filesSelectedSummary: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')} выбрано`,
     filesRejectedSummary: (n) => `${n} ${pluralRu(n, 'файл', 'файла', 'файлов')} отклонено`,
     rejectVectorReason: 'Векторный режим принимает только SVG-файлы.',
-    rejectRasterReason: 'Растровый режим принимает JPG, PNG, WebP и AVIF.',
-    rejectVideoReason: 'Режим видео принимает MP4, AVI, MOV и MKV.',
+    rejectRasterReason: `Растровый режим принимает ${rasterFormatsList}.`,
+    rejectVideoReason: `Режим видео принимает ${videoFormatsList}.`,
     maxSize: (size) => `до ${size}`,
     rejectTooLargeReason: (maxSize) => `Файл слишком большой. Максимальный размер: ${maxSize}.`,
     removeFile: 'Убрать файл',

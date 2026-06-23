@@ -59,7 +59,7 @@
         <RunPanel
           :file-count="state.selectedFiles.value.length"
           :output-count="plannedOutputCount"
-          :disabled="state.selectedFiles.value.length === 0 || state.status.value === 'processing'"
+          :disabled="!plannedOutputCount || state.status.value === 'processing'"
           :processing="state.status.value === 'processing'"
           :has-outdated-results="state.hasOutdatedResults.value"
           :progress="workerProgress"

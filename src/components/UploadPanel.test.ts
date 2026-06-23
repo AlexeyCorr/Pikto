@@ -13,6 +13,6 @@ describe('UploadPanel', () => {
     });
 
     const input = container.querySelector('input[type="file"]');
-    expect(input?.getAttribute('accept')).toBe('.mp4,.avi,.mov,.mkv,video/mp4,video/x-msvideo,video/quicktime,video/x-matroska');
+    expect(input?.getAttribute('accept')).toBe('.mp4,.avi,.mpg,.mpeg,.mov,.mkv,.gif,video/mp4,video/x-msvideo,video/mpeg,video/quicktime,video/x-matroska,image/gif');
   });
 });
