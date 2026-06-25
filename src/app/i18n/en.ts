@@ -61,7 +61,6 @@ export const en: Translations = {
     presetHigh: 'High quality',
     presetBalanced: 'Balanced',
     presetSmall: 'Max compression',
-    videoFormatComingSoon: 'soon',
     removeAudio: 'Remove audio',
   },
   uploadPanel: {

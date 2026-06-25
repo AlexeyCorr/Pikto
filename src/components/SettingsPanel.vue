@@ -139,10 +139,6 @@
             />
             {{ format.toUpperCase() }}
           </label>
-          <span v-for="format in VIDEO_COMING_SOON_FORMATS" :key="format" class="settings-panel__format-option settings-panel__format-option--coming-soon">
-            {{ format.toUpperCase() }}
-            <span class="settings-panel__coming-soon-badge">{{ t.settingsPanel.videoFormatComingSoon }}</span>
-          </span>
         </div>
       </fieldset>
 
@@ -183,7 +179,7 @@
 
 <script setup lang="ts">
   import { t } from '@/app/i18n';
-  import { RASTER_EXTRA_FORMATS, VIDEO_COMING_SOON_FORMATS, VIDEO_COMPRESSION_PRESETS, VIDEO_EXTRA_FORMATS } from '@/app/constants';
+  import { RASTER_EXTRA_FORMATS, VIDEO_COMPRESSION_PRESETS, VIDEO_EXTRA_FORMATS } from '@/app/constants';
   import type {
     Mode,
     RasterFormat,
@@ -270,24 +266,6 @@
 
   .settings-panel__format-option--original {
     color: var(--text-secondary-color);
-  }
-
-  .settings-panel__format-option--coming-soon {
-    opacity: 0.4;
-    cursor: default;
-    gap: 5px;
-  }
-
-  .settings-panel__coming-soon-badge {
-    font-size: 0.65rem;
-    font-family: 'JetBrains Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary-color);
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    padding: 1px 5px;
-    line-height: 1.4;
   }
 
   .settings-panel__format-divider {

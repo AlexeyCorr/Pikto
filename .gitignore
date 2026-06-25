@@ -31,3 +31,4 @@ vite.config.d.ts
 
 # Internal planning docs
 docs/
+.omc

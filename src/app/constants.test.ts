@@ -5,7 +5,6 @@ import {
   FORMATS,
   RASTER_EXTRA_FORMATS,
   RASTER_FORMAT_MIME_TYPES,
-  VIDEO_COMING_SOON_FORMATS,
   VIDEO_EXTRA_FORMATS,
   VIDEO_FORMAT_MIME_TYPES,
 } from './constants';
@@ -27,8 +26,7 @@ describe('format constants', () => {
 
   it('derives raster and video format collections from shared constants', () => {
     expect(RASTER_EXTRA_FORMATS).toEqual([FORMATS.JPG, FORMATS.PNG, FORMATS.WEBP, FORMATS.AVIF]);
-    expect(VIDEO_EXTRA_FORMATS).toEqual([FORMATS.MP4, FORMATS.AVI, FORMATS.MOV, FORMATS.MKV]);
-    expect(VIDEO_COMING_SOON_FORMATS).toEqual([FORMATS.WEBM]);
+    expect(VIDEO_EXTRA_FORMATS).toEqual([FORMATS.MP4, FORMATS.WEBM, FORMATS.AVI, FORMATS.MOV, FORMATS.MKV]);
   });
 
   it('keeps mime type maps aligned with format ids', () => {
@@ -42,6 +40,7 @@ describe('format constants', () => {
   it('builds accepted file types and accept attributes from the same registry', () => {
     expect(ACCEPTED_FILE_TYPES.video).toEqual([
       'video/mp4',
+      'video/webm',
       'video/x-msvideo',
       'video/mpeg',
       'video/quicktime',
@@ -49,7 +48,7 @@ describe('format constants', () => {
       'image/gif',
     ]);
     expect(ACCEPT_ATTRIBUTE_BY_MODE.video).toBe(
-      '.mp4,.avi,.mpg,.mpeg,.mov,.mkv,.gif,video/mp4,video/x-msvideo,video/mpeg,video/quicktime,video/x-matroska,image/gif',
+      '.mp4,.webm,.avi,.mpg,.mpeg,.mov,.mkv,.gif,video/mp4,video/webm,video/x-msvideo,video/mpeg,video/quicktime,video/x-matroska,image/gif',
     );
   });
 });

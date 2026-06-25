@@ -33,8 +33,8 @@ describe('filterAcceptedFiles', () => {
   it('accepts supported video inputs in video mode', () => {
     const result = filterAcceptedFiles('video', [svgFile, mp4File, webmFile, aviFile, mpgFile, gifFile, txtFile]);
 
-    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.avi', 'clip.mpg', 'clip.gif']);
-    expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'clip.webm', 'notes.txt']);
+    expect(result.accepted.map((file) => file.name)).toEqual(['clip.mp4', 'clip.webm', 'clip.avi', 'clip.mpg', 'clip.gif']);
+    expect(result.rejected.map((item) => item.file.name)).toEqual(['icon.svg', 'notes.txt']);
   });
 });
 

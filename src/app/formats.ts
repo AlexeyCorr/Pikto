@@ -45,7 +45,7 @@ const FORMAT_EXTENSIONS = {
 
 export const RASTER_FORMATS = [FORMATS.JPG, FORMATS.PNG, FORMATS.WEBP, FORMATS.AVIF] as const;
 export const VIDEO_OUTPUT_FORMATS = [FORMATS.MP4, FORMATS.WEBM, FORMATS.AVI, FORMATS.MOV, FORMATS.MKV] as const;
-export const VIDEO_ACCEPTED_INPUT_FORMATS = [FORMATS.MP4, FORMATS.AVI, FORMATS.MPG, FORMATS.MOV, FORMATS.MKV, FORMATS.GIF] as const;
+export const VIDEO_ACCEPTED_INPUT_FORMATS = [FORMATS.MP4, FORMATS.WEBM, FORMATS.AVI, FORMATS.MPG, FORMATS.MOV, FORMATS.MKV, FORMATS.GIF] as const;
 
 function createMimeTypeMap<T extends string>(formats: readonly T[]): Record<T, string> {
   return Object.fromEntries(formats.map((format) => [format, FORMAT_MIME_TYPES[format as keyof typeof FORMAT_MIME_TYPES]])) as Record<T, string>;
@@ -63,7 +63,7 @@ function createAcceptedExtensions<T extends string>(formats: readonly T[]) {
 
 export const VECTOR_MIME_TYPES = [FORMAT_MIME_TYPES[FORMATS.SVG]] as const;
 export const RASTER_FORMAT_MIME_TYPES = createMimeTypeMap(RASTER_FORMATS);
-export const VIDEO_FORMAT_MIME_TYPES = createMimeTypeMap([...VIDEO_ACCEPTED_INPUT_FORMATS, FORMATS.WEBM]);
+export const VIDEO_FORMAT_MIME_TYPES = createMimeTypeMap(VIDEO_ACCEPTED_INPUT_FORMATS);
 
 type ModeKey = 'raster' | 'vector' | 'video';
 
@@ -76,6 +76,7 @@ export const RASTER_MIME_TYPE_TO_FORMAT: Record<string, typeof RASTER_FORMATS[nu
 
 export const VIDEO_MIME_TYPE_TO_FORMAT: Record<string, typeof VIDEO_ACCEPTED_INPUT_FORMATS[number]> = {
   [FORMAT_MIME_TYPES[FORMATS.MP4]]: FORMATS.MP4,
+  [FORMAT_MIME_TYPES[FORMATS.WEBM]]: FORMATS.WEBM,
   [FORMAT_MIME_TYPES[FORMATS.AVI]]: FORMATS.AVI,
   [FORMAT_MIME_TYPES[FORMATS.MPG]]: FORMATS.MPG,
   [FORMAT_MIME_TYPES[FORMATS.MOV]]: FORMATS.MOV,

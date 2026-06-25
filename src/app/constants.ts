@@ -49,9 +49,7 @@ export const DEFAULT_RASTER_SETTINGS: RasterSettings = {
 
 export const RASTER_EXTRA_FORMATS: RasterFormat[] = [...RASTER_FORMATS];
 
-export const VIDEO_EXTRA_FORMATS: VideoFormat[] = VIDEO_OUTPUT_FORMATS.filter((format) => format !== FORMATS.WEBM);
-
-export const VIDEO_COMING_SOON_FORMATS: VideoFormat[] = [FORMATS.WEBM];
+export const VIDEO_EXTRA_FORMATS: VideoFormat[] = [...VIDEO_OUTPUT_FORMATS];
 
 export const VIDEO_COMPRESSION_PRESETS: VideoCompressionPreset[] = ['high', 'balanced', 'small'];
 

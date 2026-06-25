@@ -8,7 +8,7 @@ export type RasterOutputFormat = RasterFormat | 'original';
 
 export type VideoFormat = typeof VIDEO_OUTPUT_FORMATS[number];
 
-export type VideoInputFormat = typeof VIDEO_ACCEPTED_INPUT_FORMATS[number] | typeof FORMATS.WEBM;
+export type VideoInputFormat = typeof VIDEO_ACCEPTED_INPUT_FORMATS[number];
 
 export type VideoOutputFormat = VideoFormat | 'original';
 

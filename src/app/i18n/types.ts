@@ -51,7 +51,6 @@ export interface Translations {
     presetHigh: string;
     presetBalanced: string;
     presetSmall: string;
-    videoFormatComingSoon: string;
     removeAudio: string;
   };
   uploadPanel: {

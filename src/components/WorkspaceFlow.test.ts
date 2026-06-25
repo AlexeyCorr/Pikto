@@ -23,7 +23,7 @@ describe('Workspace flow', () => {
     await fireEvent.click(screen.getByRole('button', { name: /video/i }));
 
     expect(screen.getAllByText(/^mp4$/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/webm/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/webm/i)).toBeInTheDocument();
     expect(screen.getByText(/compression preset/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reducio!/i })).toBeInTheDocument();
   });

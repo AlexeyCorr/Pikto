@@ -38,8 +38,7 @@ describe('SettingsPanel', () => {
 
     expect(screen.getByText(/output formats/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/original/i)).toBeInTheDocument();
-    expect(screen.getByText(/webm/i)).toBeInTheDocument();
-    expect(screen.getByText(/soon|скоро/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/webm/i)).toBeInTheDocument();
     expect(screen.getByText(/compression preset/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/balanced/i)).toBeInTheDocument();
   });

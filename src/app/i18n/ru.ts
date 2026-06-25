@@ -66,7 +66,6 @@ export const ru: Translations = {
     presetHigh: 'Высокое качество',
     presetBalanced: 'Баланс',
     presetSmall: 'Макс. сжатие',
-    videoFormatComingSoon: 'скоро',
     removeAudio: 'Убрать звук',
   },
   uploadPanel: {

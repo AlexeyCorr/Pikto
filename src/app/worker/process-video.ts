@@ -9,11 +9,15 @@ let ffmpegPromise: Promise<FFmpeg> | null = null;
 const WEBM_VIDEO_FILTER = 'scale=trunc(iw/2)*2:trunc(ih/2)*2';
 
 const MP4_CRF: Record<VideoCompressionPreset, string> = { high: '21', balanced: '28', small: '34' };
-const WEBM_CRF: Record<VideoCompressionPreset, string> = { high: '15', balanced: '25', small: '35' };
+const WEBM_CRF: Record<VideoCompressionPreset, string> = { high: '22', balanced: '30', small: '38' };
+const WEBM_MAX_BITRATE: Record<VideoCompressionPreset, string> = { high: '6M', balanced: '2M', small: '1M' };
 
 const STRIP_METADATA_ARGS = ['-map_metadata', '-1', '-map_chapters', '-1', '-dn', '-sn'];
 const VIDEO_CODEC_ARGS = ['-vf', WEBM_VIDEO_FILTER, '-pix_fmt', 'yuv420p'];
-const AUDIO_ARGS = ['-c:a', 'libvorbis', '-b:a', '128k'];
+// libvorbis, а не libopus: libopus в @ffmpeg/core@0.12.10 (single-thread)
+// крашит кодирование некоторых входов (mp2 → opus: RuntimeError index out of bounds).
+// libvorbis проверенно стабилен в этой сборке на произвольных частотах/каналах.
+const WEBM_AUDIO_ARGS = ['-c:a', 'libvorbis', '-b:a', '128k'];
 
 function resolveInputFormat(file: File): VideoInputFormat {
   return resolveVideoInputFormat(file);
@@ -65,20 +69,32 @@ export function getVideoCommandArgs(
     ];
   }
 
-  // VP8 via libvpx: lower memory footprint than VP9, stable in single-thread WASM.
-  // To use CRF mode properly in libvpx (VP8), -b:v MUST be set to a high value.
-  // Setting it to 0 in VP8 falls back to 256kbps which ruins quality.
-  const webmAudioArgs = removeAudio ? ['-an'] : AUDIO_ARGS;
+  // WebM = VP8 (libvpx) в режиме constrained-quality (VPX_CQ): -crf задаёт
+  // качество, per-preset -b:v — связывающий потолок битрейта, гарантирующий
+  // разнос размеров пресетов и ограничивающий рост output.webm в WASM-heap (MEMFS).
+  // ВАЖНО: -qmin держим >= 10. -qmin 0 открывает near-lossless и переполняет
+  // линейную память single-thread WASM (симптом: Aborted() / Conversion failed).
+  // -b:v 0 в VP8 нельзя — libvpx откатывается к ~256kbps.
+  //
+  // TODO(vp9): VP9 (libvpx-vp9) дал бы меньший вес при том же качестве, но в
+  // @ffmpeg/core@0.12.10 (single-thread) он крашит WASM (RuntimeError / Aborted).
+  // Пробовали CQ-режим `-c:v libvpx-vp9 -b:v 0 -crf 31/36/42 -deadline good
+  // -cpu-used 5 -row-mt 0 -tile-columns 0 -threads 1` + автофолбэк на VP8 —
+  // VP9 стабильно падал, фолбэк откатили. Вернуться, когда обновится core
+  // или появится multi-thread сборка (COOP/COEP + SharedArrayBuffer).
+  const webmAudioArgs = removeAudio ? ['-an'] : WEBM_AUDIO_ARGS;
   return [
     ...STRIP_METADATA_ARGS,
     '-c:v', 'libvpx',
     ...VIDEO_CODEC_ARGS,
     '-crf', WEBM_CRF[preset],
-    '-b:v', '100M',
-    '-avoid_negative_ts', 'make_zero',
+    '-b:v', WEBM_MAX_BITRATE[preset],
+    '-qmin', '10',
+    '-qmax', '56',
     '-deadline', 'good',
-    '-cpu-used', '3',
+    '-cpu-used', '4',
     '-threads', '1',
+    '-avoid_negative_ts', 'make_zero',
     ...webmAudioArgs,
     outputName,
   ];

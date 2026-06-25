@@ -96,12 +96,14 @@ describe('getVideoCommandArgs', () => {
       '-c:v', 'libvpx',
       '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
       '-pix_fmt', 'yuv420p',
-      '-crf', '35',
-      '-b:v', '100M',
-      '-avoid_negative_ts', 'make_zero',
+      '-crf', '38',
+      '-b:v', '1M',
+      '-qmin', '10',
+      '-qmax', '56',
       '-deadline', 'good',
-      '-cpu-used', '3',
+      '-cpu-used', '4',
       '-threads', '1',
+      '-avoid_negative_ts', 'make_zero',
       '-c:a', 'libvorbis',
       '-b:a', '128k',
       'output.webm',
@@ -184,6 +186,15 @@ describe('encodeVideoFile', () => {
 
     expect(ffmpegMock.writeFile).toHaveBeenCalledWith('input.mpg', expect.any(Uint8Array));
     expect(ffmpegMock.exec).toHaveBeenCalledWith(expect.arrayContaining(['-i', 'input.mpg', 'output.avi']));
+  });
+
+  it('encodes webm with VP8 (libvpx)', async () => {
+    await encodeVideoFile(mp4File, 'webm', 'balanced', false);
+
+    expect(ffmpegMock.exec).toHaveBeenCalledTimes(1);
+    const call = ffmpegMock.exec.mock.calls[0]?.[0] as string[];
+    expect(call).toEqual(expect.arrayContaining(['-c:v', 'libvpx']));
+    expect(call).not.toContain('libvpx-vp9');
   });
 
   it('returns a user-friendly error message when encoding fails', async () => {
