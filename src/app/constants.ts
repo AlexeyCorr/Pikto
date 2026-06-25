@@ -23,7 +23,7 @@ import type {
   VideoFormat,
   VideoSettings,
 } from './types';
-import { FORMATS, RASTER_FORMATS, VIDEO_OUTPUT_FORMATS } from './formats';
+import { RASTER_FORMATS, VIDEO_OUTPUT_FORMATS } from './formats';
 
 export const MAX_FILE_SIZE: Record<Mode, number> = {
   raster: 50 * 1024 * 1024,
