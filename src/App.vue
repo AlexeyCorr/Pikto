@@ -1,7 +1,7 @@
 <template>
   <AppHeader />
   <main class="app-shell">
-    <AppHero />
+    <AppHero :processing="state.status.value === 'processing'" />
 
     <section class="workspace" aria-labelledby="workspace-title">
       <div class="workspace__header">

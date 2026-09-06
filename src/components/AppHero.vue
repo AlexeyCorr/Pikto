@@ -5,151 +5,91 @@
     <p class="hero__lead">{{ t.hero.lead }}</p>
     <TerminalPrompt path="~/pikto" command="compress assets --to webp,avif" />
 
-    <div
-      class="mascot"
-      :class="{ 'mascot--chewing': isScrolling && scrollY > 5 }"
-      :style="mascotStyle"
-      aria-hidden="true"
-    >
-      <svg class="mascot__svg" xmlns="http://www.w3.org/2000/svg" style="--beaver-skin-light:#D5925F;--beaver-skin-dark:#A66637;--beaver-features:#512D15;--beaver-features-dark:#351C0C;--harness-color-light:#0D9488;--harness-color-dark:#0F766E;--harness-buckle:#1F2937;--harness-buckle-accent:#9CA3AF;--card-sky-start:#BAE6FD;--card-sky-end:#7DD3FC;--card-mountain-light:#4ADE80;--card-mountain-dark:#16A34A;--card-sun:#F59E0B;--pixel-color-1:#4ADE80;--pixel-color-2:#22C55E;--pixel-color-3:#16A34A" viewBox="0 0 600 800">
-        <defs>
-          <linearGradient id="body-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
-            <stop class="skin-gradient-start" offset="0%" stop-color="#e8a773" />
-            <stop class="skin-gradient-end" offset="100%" stop-color="#a66637" />
-          </linearGradient>
-          <linearGradient id="harness-gradient" x1="0%" x2="100%" y1="0%" y2="100%">
-            <stop offset="0%" stop-color="var(--harness-color-light)" />
-            <stop offset="100%" stop-color="var(--harness-color-dark)" />
-          </linearGradient>
-          <linearGradient id="sky-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
-            <stop offset="0%" style="stop-color:var(--card-sky-start)" />
-            <stop offset="100%" style="stop-color:var(--card-sky-end)" />
-          </linearGradient>
-          <linearGradient id="tail-gradient" x1="0%" x2="100%" y1="0%" y2="100%">
-            <stop offset="0%" stop-color="#5c3b24" />
-            <stop offset="100%" stop-color="#382010" />
-          </linearGradient>
-          <clipPath id="tail-clip">
-            <path d="M360 400c40-20 110-10 150 30s30 110-30 140-110-20-130-70Z" />
-          </clipPath>
-          <clipPath id="card-clip">
-            <path d="M218 328h164v106h-13v10h-15v-15h-15v10h-15v-15h-15v10h-15v15h-15v-10h-15v-10h-15v10h-15v-15h-15v10Z" />
-          </clipPath>
-          <filter id="soft-shadow" width="120%" height="120%" x="-10%" y="-10%">
-            <feDropShadow dx="0" dy="8" flood-opacity=".15" stdDeviation="10" />
-          </filter>
-        </defs>
-        <ellipse cx="300" cy="590" filter="blur(8px)" opacity=".12" rx="140" ry="25" />
-        <g id="tail">
-          <path id="tail-shape" fill="url(#tail-gradient)" d="M360 400c40-20 110-10 150 30s30 110-30 140-110-20-130-70Z" filter="url(#soft-shadow)" />
-          <g clip-path="url(#tail-clip)">
-            <path fill="none" stroke="var(--beaver-features-dark)" stroke-linecap="round" stroke-width="4.5" d="m320 380 200 200M350 360l200 200M380 340l200 200M410 320l200 200m-290 40 200-200M350 580l200-200M380 600l200-200M290 540l200-200" opacity=".45" />
-          </g>
-        </g>
-        <g id="hanging-rig" filter="url(#soft-shadow)">
-          <path stroke="#9ca3af" stroke-linecap="round" stroke-width="5" d="M300 0v70" />
-          <circle cx="300" cy="80" r="16" fill="none" stroke="#9ca3af" stroke-width="7" />
-          <path stroke="var(--harness-color-light)" stroke-linecap="round" stroke-width="16" d="m288 88-66 122M312 88l66 122" />
-        </g>
-        <g id="beaver-body-group">
-          <circle cx="218" cy="180" r="24" class="beaver-feature-fill" filter="url(#soft-shadow)" />
-          <circle cx="218" cy="180" r="14" fill="#8c4e2d" />
-          <circle cx="382" cy="180" r="24" class="beaver-feature-fill" filter="url(#soft-shadow)" />
-          <circle cx="382" cy="180" r="14" fill="#8c4e2d" />
-          <path id="body-path" d="M300 155c75 0 115 50 125 140s-15 195-125 195-135-105-125-195 50-140 125-140" filter="url(#soft-shadow)" style="fill:url(#body-gradient)" />
-        </g>
-        <g id="chest-harness">
-          <path fill="none" stroke="url(#harness-gradient)" stroke-linecap="round" stroke-width="18" d="M183 380c47 40 187 40 234 0" />
-          <path fill="none" stroke="url(#harness-gradient)" stroke-linecap="round" stroke-width="18" d="M222 210c13 70 48 160 118 182" />
-          <path fill="none" stroke="url(#harness-gradient)" stroke-linecap="round" stroke-width="18" d="M378 210c-13 70-38 125-68 150" />
-          <g transform="rotate(15 -1109.789 1401.81)">
-            <rect width="28" height="28" x="-14" y="-14" rx="6" style="fill:var(--harness-buckle)" />
-            <rect width="18" height="18" x="-9" y="-9" fill="none" stroke="var(--harness-buckle-accent)" stroke-width="4" rx="3" />
-            <path stroke="var(--harness-buckle-accent)" stroke-width="4" d="M-12 0h24" />
-          </g>
-        </g>
-        <g id="face">
-          <circle cx="265" cy="245" r="7" fill="#1a0d07" />
-          <circle cx="267" cy="243" r="2.2" fill="#fff" />
-          <circle cx="335" cy="245" r="7" fill="#1a0d07" />
-          <circle cx="337" cy="243" r="2.2" fill="#fff" />
-          <g opacity=".7">
-            <path stroke="var(--beaver-features)" stroke-linecap="round" stroke-width="4.5" d="m235 268-25 2m20 10-25 5m30 7-20 6M365 268l25 2m-20 10 25 5m-30 7 20 6" />
-          </g>
-          <g class="beaver-mouth">
-            <path fill="#3a0c0c" stroke="var(--beaver-features-dark)" stroke-width="2.5" d="M276 276s6 30 24 30 24-30 24-30-24 6-48 0Z" />
-            <rect width="9" height="12" x="290" y="278" fill="#fff" rx="2" />
-            <rect width="9" height="12" x="301" y="278" fill="#fff" rx="2" />
-            <path fill="#fda4af" d="M288 298c4-6 20-6 24 0-4 7-20 7-24 0" />
-          </g>
-          <path fill="#1f0d04" d="M286 256c0-9 28-9 28 0s-14 18-14 18-14-9-14-18" />
-          <path fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2" d="M292 252c0-2 6-2 8 0" opacity=".3" />
-        </g>
-        <g id="image-card" filter="url(#soft-shadow)">
-          <path fill="#fff" d="M210 320h180v120h-15v10h-15v-15h-15v10h-15v-15h-15v10h-15v15h-15v-10h-15v-10h-15v10h-15v-15h-15v10h-15Z" />
-          <g clip-path="url(#card-clip)">
-            <path fill="url(#sky-gradient)" d="M218 328h164v130H218z" />
-            <circle cx="340" cy="360" r="16" style="fill:var(--card-sun)" />
-            <path d="m280 460 55-90 47 90z" style="fill:var(--card-mountain-dark)" />
-            <path d="m218 460 52-65 52 65z" style="fill:var(--card-mountain-light)" />
-          </g>
-        </g>
-        <g id="paws">
-          <g id="left-paw" filter="url(#soft-shadow)">
-            <rect width="22" height="13" x="194" y="335" class="beaver-feature-fill" rx="6.5" transform="rotate(-12 205 341.5)" />
-            <rect width="25" height="13" x="188" y="348" class="beaver-feature-fill" rx="6.5" />
-            <rect width="22" height="13" x="194" y="361" class="beaver-feature-fill" rx="6.5" transform="rotate(12 205 367.5)" />
-          </g>
-          <g id="right-paw" filter="url(#soft-shadow)">
-            <rect width="22" height="13" x="384" y="335" class="beaver-feature-fill" rx="6.5" transform="rotate(12 395 341.5)" />
-            <rect width="25" height="13" x="387" y="348" class="beaver-feature-fill" rx="6.5" />
-            <rect width="22" height="13" x="384" y="361" class="beaver-feature-fill" rx="6.5" transform="rotate(-12 395 367.5)" />
-          </g>
-          <g id="left-foot" filter="url(#soft-shadow)">
-            <ellipse cx="235" cy="480" class="beaver-feature-fill" rx="18" ry="24" transform="rotate(-15 235 480)" />
-            <circle cx="222" cy="464" r="5" class="beaver-feature-fill" />
-            <circle cx="234" cy="460" r="5" class="beaver-feature-fill" />
-            <circle cx="246" cy="464" r="5" class="beaver-feature-fill" />
-          </g>
-          <g id="right-foot" filter="url(#soft-shadow)">
-            <ellipse cx="365" cy="480" class="beaver-feature-fill" rx="18" ry="24" transform="rotate(15 365 480)" />
-            <circle cx="354" cy="464" r="5" class="beaver-feature-fill" />
-            <circle cx="366" cy="460" r="5" class="beaver-feature-fill" />
-            <circle cx="378" cy="464" r="5" class="beaver-feature-fill" />
-          </g>
-        </g>
-        <g id="falling-pixels">
-          <path d="m231.133 454.05 11.818 2.083-2.084 11.818-11.818-2.084z" class="pixel-fill-1" />
-          <path d="m249.583 460.455 9.962-.872.872 9.962-9.962.872z" class="pixel-fill-2" />
-          <path d="m282.05 468.427 13.523 3.623-3.623 13.523-13.523-3.623z" class="pixel-fill-3" />
-          <path d="m321 462.515 8.485 8.485-8.485 8.485-8.485-8.485z" class="pixel-fill-1" />
-          <path d="m348.591 457.012 9.397-3.42 3.42 9.396-9.396 3.42z" class="pixel-fill-2" />
-          <path d="m370.893 464.223 11.884 1.67-1.67 11.884-11.884-1.67z" class="pixel-fill-3" />
-          <path d="m222.582 488.355 9.063 4.227-4.227 9.063-9.063-4.227z" class="pixel-fill-2" opacity=".9" />
-          <path d="m243.652 511.757 11.59-3.105 3.106 11.59-11.59 3.106z" class="pixel-fill-3" opacity=".8" />
-          <path d="m278.17 493.17 8.66 5-5 8.66-8.66-5z" class="pixel-fill-1" opacity=".85" />
-          <path d="m300.637 524.417 13.946 1.22-1.22 13.946-13.946-1.22z" class="pixel-fill-2" opacity=".75" />
-          <path d="m332.956 504.384 7.66-6.428 6.428 7.66-7.66 6.428z" class="pixel-fill-3" opacity=".9" />
-          <path d="m361.379 518.884 11.737 2.495-2.495 11.737-11.737-2.495z" class="pixel-fill-1" opacity=".8" />
-          <path d="m235.364 549.667 7.97.697-.698 7.97-7.97-.698z" class="pixel-fill-1" opacity=".6" />
-          <path d="m258.17 583.17 8.66-5 5 8.66-8.66 5z" class="pixel-fill-3" opacity=".5" />
-          <path d="m291.172 564.101 7.727 2.07-2.07 7.728-7.728-2.07z" class="pixel-fill-2" opacity=".55" />
-          <path d="m330.26 587.547 9.193 7.713-7.713 9.193-9.193-7.713z" class="pixel-fill-1" opacity=".4" />
-          <path d="m349.482 560.596 7.922-1.114 1.114 7.922-7.922 1.114z" class="pixel-fill-3" opacity=".6" />
-          <path d="m251.432 638.96 7.608 2.472-2.472 7.608-7.608-2.472z" class="pixel-fill-2" opacity=".3" />
-          <path d="m279.75 665.273 5.977-.523.523 5.977-5.977.523z" class="pixel-fill-1" opacity=".2" />
-          <path d="m313.018 648.43 6.553 4.588-4.589 6.553-6.553-4.589z" class="pixel-fill-3" opacity=".25" />
-          <path d="m340.567 669.525 5.908 1.042-1.042 5.908-5.908-1.042z" class="pixel-fill-2" opacity=".15" />
-        </g>
-      </svg>
-    </div>
+    <Teleport to="body" :disabled="!hasProcessed">
+      <Transition name="mascot-presence">
+        <div
+          v-if="!hasProcessed || processing"
+          :key="hasProcessed ? 'processing' : 'intro'"
+          class="mascot"
+          :class="{ 'mascot--chewing': processing || (isScrolling && scrollY > 5), 'mascot--processing': hasProcessed }"
+          :style="hasProcessed ? undefined : mascotStyle"
+          aria-hidden="true"
+        >
+          <svg class="mascot__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none">
+            <path d="M258 0v139" stroke="#A6B8B1" stroke-width="4" stroke-linecap="round" />
+            <g class="mascot__tail">
+              <path d="M262 291c28-2 69 24 86 53 17 28 5 58-20 67-27 10-58-9-76-33-18-25-23-55-12-71Z" fill="#69463E" />
+              <path d="m266 317 63 61m-73-39 55 53m-23-77 47 46m-76 3 45-45m-28 62 45-45m-25 62 39-39" stroke="#503730" stroke-width="4" stroke-linecap="round" />
+            </g>
+            <!-- The raised arm joins the shoulder behind the head; the rope passes through the grip. -->
+            <path d="M224 247c18-35 13-71 17-101 1-14 7-23 17-22 13 2 15 12 12 27-4 36 6 74-17 106Z" fill="#A36C53" />
+            <path d="M254 111c-11-2-21 3-22 10-1 4 1 7 5 9-4 3-4 8-1 12 4 5 12 7 22 7 12 0 21-7 22-17 1-9-9-18-26-21Z" fill="#A36C53" />
+            <path d="M237 123q8 3 17 2m-16 9q8 3 16 1" stroke="#754C3E" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M176 216c39-25 89-8 107 32 19 41 19 82-5 109-26 30-82 25-116 2-34-24-42-61-29-94 8-21 24-37 43-49Z" fill="#A36C53" />
+            <path d="M183 277c25-18 66-6 75 22 10 29-6 52-33 56-29 4-56-16-58-39-2-15 3-30 16-39Z" fill="#B77F5F" />
+            <path d="M261 354c19 6 25 27 15 35-12 9-32-10-36-25m-56-6c6 20-2 41-15 38-14-3-16-27-10-42" fill="#754C3E" />
+            <g transform="rotate(-16 165 220)">
+              <circle cx="111" cy="166" r="18" fill="#A36C53" />
+              <circle cx="111" cy="166" r="8" fill="#754C3E" />
+              <circle cx="221" cy="161" r="18" fill="#A36C53" />
+              <circle cx="221" cy="161" r="8" fill="#754C3E" />
+              <path d="M164 153c-46 0-79 26-83 65-6 42 18 69 76 70 58 2 91-20 91-58 0-46-32-77-84-77Z" fill="#B77F5F" />
+              <path d="M163 227c-19-21-48-15-53 9-6 26 22 43 54 43 35 0 60-18 55-42-5-24-36-31-56-10Z" fill="#DFB58D" />
+              <ellipse cx="135" cy="211" rx="8.5" ry="12" fill="#352B29" />
+              <ellipse cx="194" cy="207" rx="8.5" ry="12" fill="#352B29" />
+              <circle cx="137" cy="207" r="2.8" fill="#FFF4DE" />
+              <circle cx="196" cy="203" r="2.8" fill="#FFF4DE" />
+              <path d="M149 231c-2-10 29-12 29-3 0 7-8 14-13 14-6 0-15-5-16-11Z" fill="#352B29" />
+            </g>
+            <path d="M143 278c-17-8-33-1-44 12l-5 20c19 11 39-1 49-13Z" fill="#A36C53" />
+            <g transform="rotate(10 155 306)">
+              <!-- A stepped bite sits directly under the two incisors. -->
+              <path d="M106 265h39v13h14v-8h15v10h14v-15h19a9 9 0 0 1 9 9v74a9 9 0 0 1-9 9H106a9 9 0 0 1-9-9v-74a9 9 0 0 1 9-9Z" fill="#FFF4DE" />
+              <path d="M106 285h101v63H106Z" fill="#A8D5CA" />
+              <circle cx="188" cy="299" r="10" fill="#EDB762" />
+              <path d="m106 348 31-38 33 38Z" fill="#62B294" />
+              <path d="m146 348 32-49 29 49Z" fill="#28866E" />
+            </g>
+            <g transform="rotate(-16 165 220)">
+              <g class="mascot__mouth">
+                <path d="M145 250q21 12 42-2c-2 20-10 32-21 32-10 0-18-13-21-30Z" fill="#59382F" />
+                <path d="M152 255q6 3 12 2v19q-6 2-12 0Zm16 2q6 0 12-3v21q-6 3-12 2Z" fill="#FFF4DE" />
+                <path d="M145 250q21 12 42-2" stroke="#694236" stroke-width="2.5" stroke-linecap="round" />
+              </g>
+            </g>
+            <path d="M102 289c-11-5-21-3-24 6-5 13 6 25 18 28 10 3 18-1 19-8 0-5-5-9-12-11 7 0 12-3 11-8-1-4-7-7-12-7Z" fill="#A36C53" />
+            <path d="M85 301q7 8 17 7" stroke="#754C3E" stroke-width="2.5" stroke-linecap="round" />
+            <g fill="#4ADE80">
+              <path class="mascot__pixel" d="m112 358 12 4-4 12-12-4Z" />
+              <path class="mascot__pixel" d="m142 370 10-3 3 10-10 3Z" fill="#22C55E" />
+              <path class="mascot__pixel" d="m185 358 13 3-3 13-13-3Z" />
+              <path class="mascot__pixel" d="m215 375 9-4 4 9-9 4Z" fill="#22C55E" />
+              <path class="mascot__pixel" d="m122 394 9 3-3 9-9-3Z" />
+              <path class="mascot__pixel" d="m163 400 11-2 2 11-11 2Z" fill="#22C55E" />
+              <path class="mascot__pixel" d="m200 415 9 4-4 9-9-4Z" />
+              <path class="mascot__pixel" d="m143 432 8-3 3 8-8 3Z" fill="#22C55E" />
+              <path class="mascot__pixel" d="m179 448 7 2-2 7-7-2Z" />
+            </g>
+          </svg>
+        </div>
+      </Transition>
+    </Teleport>
   </section>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, onUnmounted, computed } from 'vue';
+  import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
   import { t } from '@/app/i18n';
   import TerminalPrompt from './TerminalPrompt.vue';
+
+  const props = defineProps<{ processing: boolean }>();
+  const hasProcessed = ref(false);
+
+  watch(() => props.processing, (processing) => {
+    if (processing) {
+      hasProcessed.value = true;
+    }
+  }, { immediate: true });
 
   const scrollY = ref(0);
   const isScrolling = ref(false);
@@ -199,6 +139,7 @@
 
   .hero__meta {
     margin: 0;
+    padding-right: 130px;
     color: var(--text-secondary-color);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
@@ -258,6 +199,22 @@
     animation: mascot-slide-down 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 
+  .mascot--processing {
+    position: fixed;
+    top: 0;
+    right: 12px;
+    z-index: 20;
+  }
+
+  .mascot-presence-leave-active {
+    transition: transform 0.45s ease-in, opacity 0.45s ease-in;
+  }
+
+  .mascot-presence-leave-to {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+
   /* Анимация плавного спуска при загрузке */
   @keyframes mascot-slide-down {
     0% {
@@ -270,99 +227,57 @@
     }
   }
 
-  /* Анимация жевания рта бобра при скролле */
-  .mascot--chewing .beaver-mouth {
-    animation: beaver-chew 0.15s infinite ease-in-out;
-    transform-origin: 300px 270px;
+  .mascot--chewing .mascot__mouth {
+    animation: mascot-chew 0.24s infinite ease-in-out;
+    transform-origin: 166px 246px;
   }
 
-  @keyframes beaver-chew {
+  @keyframes mascot-chew {
     0%, 100% {
-      transform: translateY(0) scaleY(1);
+      transform: translateY(0);
     }
     50% {
-      transform: translateY(4px) scaleY(0.85);
+      transform: translateY(2px) scaleY(0.92);
     }
   }
 
-  /* Вибрация и всасывание пикселей при скролле (жевании) */
-  .mascot--chewing .pixel-fill-1 {
-    animation: pixel-shake 0.12s infinite linear, pixel-float-up-1 0.4s infinite linear;
+  .mascot--chewing .mascot__pixel {
+    animation: mascot-crumb-fall 0.85s infinite linear;
+    transform-box: fill-box;
     transform-origin: center;
   }
 
-  .mascot--chewing .pixel-fill-2 {
-    animation: pixel-shake 0.1s infinite linear, pixel-float-up-2 0.5s infinite linear;
-    transform-origin: center;
+  .mascot--chewing .mascot__pixel:nth-child(2n) {
+    animation-delay: -0.2s;
   }
 
-  .mascot--chewing .pixel-fill-3 {
-    animation: pixel-shake 0.14s infinite linear, pixel-float-up-3 0.6s infinite linear;
-    transform-origin: center;
+  .mascot--chewing .mascot__pixel:nth-child(3n) {
+    animation-delay: -0.55s;
   }
 
-  @keyframes pixel-shake {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    25% {
-      transform: translate(-3px, 1px);
-    }
-    50% {
-      transform: translate(1px, -3px);
-    }
-    75% {
-      transform: translate(2px, 2px);
-    }
-  }
-
-  @keyframes pixel-float-up-1 {
+  @keyframes mascot-crumb-fall {
     0% {
-      transform: translateY(0) scale(1);
+      transform: translateY(-28px) rotate(0);
+      opacity: 0;
+    }
+    15%, 55% {
       opacity: 1;
     }
     100% {
-      transform: translateY(-80px) scale(0.6);
+      transform: translate(10px, 58px) rotate(70deg);
       opacity: 0;
     }
   }
 
-  @keyframes pixel-float-up-2 {
-    0% {
-      transform: translateY(0) scale(1);
-      opacity: 1;
+  @media (prefers-reduced-motion: reduce) {
+    .mascot {
+      transition: none;
     }
-    100% {
-      transform: translateY(-110px) scale(0.5);
-      opacity: 0;
+
+    .mascot__svg,
+    .mascot--chewing .mascot__mouth,
+    .mascot--chewing .mascot__pixel {
+      animation: none;
     }
-  }
-
-  @keyframes pixel-float-up-3 {
-    0% {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-90px) scale(0.7);
-      opacity: 0;
-    }
-  }
-
-  /* Стили для заливки частей SVG */
-  .beaver-feature-fill {
-    fill: var(--beaver-features);
-  }
-
-  .pixel-fill-1 {
-    fill: var(--pixel-color-1);
-  }
-
-  .pixel-fill-2 {
-    fill: var(--pixel-color-2);
-  }
-
-  .pixel-fill-3 {
-    fill: var(--pixel-color-3);
   }
 </style>
